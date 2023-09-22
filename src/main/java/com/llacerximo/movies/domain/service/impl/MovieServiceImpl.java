@@ -2,6 +2,7 @@ package com.llacerximo.movies.domain.service.impl;
 
 import com.llacerximo.movies.domain.entity.Movie;
 import com.llacerximo.movies.domain.service.MovieService;
+import com.llacerximo.movies.exceptions.ResourceNotFoundException;
 import com.llacerximo.movies.persistence.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie findById(int id) {
-        return movieRepository.findById(id);
+        Movie movie = movieRepository.findById(id);
+        if(movie == null) {
+            throw new ResourceNotFoundException("Movie not found: " + id);
+        }
+        return movie;
     }
 }

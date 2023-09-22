@@ -46,7 +46,6 @@ public class MovieRepositoryImpl implements MovieRepository {
         final String SQL = "SELECT * FROM movies WHERE id = ? LIMIT 1";
         try (Connection connection = DBUtil.open()){
             ResultSet resultSet = DBUtil.select(connection, SQL, List.of(id));
-            DBUtil.close(connection);
             if(resultSet.next()) {
                 return new Movie(
                         resultSet.getInt("id"),
@@ -55,10 +54,8 @@ public class MovieRepositoryImpl implements MovieRepository {
                         resultSet.getInt("runtime")
                 );
             } else {
-                throw new ResourceNotFoundException("Id movie: " + id);
+                return null;
             }
-        }catch (DBConnectionException e) {
-            throw e;
         } catch (SQLException e) {
             throw new SQLStatmentException("SQL: " + SQL);
         }
