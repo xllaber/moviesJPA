@@ -14,7 +14,6 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public Integer create(Director director) {
-        Integer id = directorRepository.insert(director);
-        return id;
+        return directorRepository.insert(director);
     }
 }

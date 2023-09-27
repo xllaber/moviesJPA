@@ -18,16 +18,11 @@ public class DirectorController {
 
     Director director = new Director("Joss Whedon", 1964, null);
 
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @GetMapping("/insert")
     public Director create(Director director){
-        try {
-            Integer id = directorService.create(this.director);
-            this.director.setId(id);
-            return this.director;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw e;
-        }
+        Integer id = directorService.create(this.director);
+        this.director.setId(id);
+        return this.director;
     }
 }

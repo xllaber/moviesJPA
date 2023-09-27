@@ -18,25 +18,15 @@ public class MovieController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
     public List<Movie> getAll() {
-        try {
             System.out.println(movieService.getAll());
             return movieService.getAll();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw e;
-        }
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     public Movie find(@PathVariable("id") int id) {
-        try {
-            System.out.println(movieService.findById(id));
-            return movieService.findById(id);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw e;
-        }
+//        System.out.println(movieService.findById(id));
+        return movieService.findById(id);
     }
 
 }

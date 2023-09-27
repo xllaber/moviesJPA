@@ -18,12 +18,7 @@ public class ActorController {
     private Actor actor2 = new Actor("Chris Evans", 1981, null);
     @GetMapping("/insert")
     public void insert() {
-        try {
-            actorService.insert(actor1);
-            actorService.insert(actor2);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw e;
-        }
+        actorService.insert(actor1);
+        actorService.insert(actor2);
     }
 }

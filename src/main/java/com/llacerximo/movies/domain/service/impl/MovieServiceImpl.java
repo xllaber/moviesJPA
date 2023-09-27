@@ -23,8 +23,9 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie findById(int id) {
         Movie movie = movieRepository.findById(id);
-        if(movie == null) {
-            throw new ResourceNotFoundException("Movie not found: " + id);
+        System.out.println(movie);
+        if (movie == null){
+            throw new ResourceNotFoundException("Movie with id " + id + " not found");
         }
         return movie;
     }
