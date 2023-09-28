@@ -8,14 +8,16 @@ import com.llacerximo.movies.exceptions.SQLStatmentException;
 import com.llacerximo.movies.persistence.MovieRepository;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MovieRepositoryImpl implements MovieRepository {
+
+    private final Integer LIMIT = 10;
+
     @Override
     public List<Movie> getAll() {
         final String SQL = "SELECT * FROM movies";
@@ -38,6 +40,46 @@ public class MovieRepositoryImpl implements MovieRepository {
             throw e;
         } catch (SQLException e) {
             throw new SQLStatmentException("SQL: " + SQL);
+        }
+    }
+
+    @Override
+    public List<Movie> getAllPaginated(Optional<Integer> page) {
+        String sql = "SELECT * FROM movies";
+        if (page.isPresent()){
+            int offset = (page.get() - 1) * LIMIT;
+            sql += String.format(" LIMIT %d, %d", offset, LIMIT);
+        }
+        List<Movie> movies = new ArrayList<>();
+        try (Connection connection = DBUtil.open()){
+            ResultSet resultSet = DBUtil.select(connection, sql, null);
+            while (resultSet.next()) {
+                movies.add(
+                        new Movie(
+                                resultSet.getInt("id"),
+                                resultSet.getString("title"),
+                                resultSet.getInt("year"),
+                                resultSet.getInt("runtime")
+                        )
+                );
+            }
+            DBUtil.close(connection);
+            return movies;
+        } catch (DBConnectionException e) {
+            throw e;
+        } catch (SQLException e) {
+            throw new SQLStatmentException("SQL: " + sql);
+        }
+    }
+
+    @Override
+    public Integer getTotalRecords() {
+        final String SQL = "SELECT COUNT(*) FROM movies";
+        try(Connection connection = DBUtil.open()){
+            Integer totalRecords = DBUtil.select(connection, SQL, null).getInt(1);
+            return totalRecords;
+        } catch (SQLException e){
+            throw new RuntimeException("Error en el conteo");
         }
     }
 

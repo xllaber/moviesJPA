@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -21,6 +22,11 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<Movie> getAllPaginated(Optional<Integer> page) {
+        return movieRepository.getAllPaginated(page);
+    }
+
+    @Override
     public Movie findById(int id) {
         Movie movie = movieRepository.findById(id);
         System.out.println(movie);
@@ -28,5 +34,13 @@ public class MovieServiceImpl implements MovieService {
             throw new ResourceNotFoundException("Movie with id " + id + " not found");
         }
         return movie;
+    }
+
+    public Integer getTotalRecords(){
+        Integer totalRecords = 0;
+        for (Movie movie: getAll()) {
+            totalRecords++;
+        }
+        return totalRecords;
     }
 }
