@@ -37,10 +37,6 @@ public class MovieServiceImpl implements MovieService {
     }
 
     public Integer getTotalRecords(){
-        Integer totalRecords = 0;
-        for (Movie movie: getAll()) {
-            totalRecords++;
-        }
-        return totalRecords;
+        return movieRepository.getTotalRecords();
     }
 }

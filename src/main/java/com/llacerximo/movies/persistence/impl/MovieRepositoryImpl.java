@@ -76,10 +76,16 @@ public class MovieRepositoryImpl implements MovieRepository {
     public Integer getTotalRecords() {
         final String SQL = "SELECT COUNT(*) FROM movies";
         try(Connection connection = DBUtil.open()){
-            Integer totalRecords = DBUtil.select(connection, SQL, null).getInt(1);
-            return totalRecords;
+            ResultSet resultSet = DBUtil.select(connection, SQL, null);
+            if (resultSet.next()){
+                Integer totalRecords = resultSet.getInt(1);
+                return totalRecords;
+            }
+            else {
+                return null;
+            }
         } catch (SQLException e){
-            throw new RuntimeException("Error en el conteo");
+            throw new RuntimeException("Error en el conteo: " + SQL + " " + e.getMessage());
         }
     }
 
