@@ -1,10 +1,12 @@
 package com.llacerximo.movies.controller;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.llacerximo.movies.domain.entity.Movie;
 import com.llacerximo.movies.domain.service.MovieService;
 import com.llacerximo.movies.http_response.Response;
 import com.llacerximo.movies.utils.PaginatonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,8 @@ import java.util.Optional;
 @RequestMapping("/movies")
 public class MovieController {
 
-    private final Integer LIMIT = 10;
+    @Value("${default.page.size}")
+    private Integer LIMIT;
 
     @Autowired
     MovieService movieService;
@@ -26,9 +29,8 @@ public class MovieController {
 //            System.out.println(movieService.getAll());
         if (page.isPresent()){
             return new Response(movieService.getAllPaginated(page), new PaginatonUtils(movieService.getTotalRecords(), LIMIT, page.get()));
-        } else {
-            return new Response(movieService.getAllPaginated(page), movieService.getTotalRecords());
         }
+        return new Response(movieService.getAll(), new PaginatonUtils(movieService.getTotalRecords()));
     }
 
     @ResponseStatus(HttpStatus.OK)

@@ -6,6 +6,7 @@ import com.llacerximo.movies.exceptions.DBConnectionException;
 import com.llacerximo.movies.exceptions.ResourceNotFoundException;
 import com.llacerximo.movies.exceptions.SQLStatmentException;
 import com.llacerximo.movies.persistence.MovieRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -16,7 +17,8 @@ import java.util.Optional;
 @Repository
 public class MovieRepositoryImpl implements MovieRepository {
 
-    private final Integer LIMIT = 10;
+    @Value("${default.page.size}")
+    private Integer LIMIT;
 
     @Override
     public List<Movie> getAll() {
@@ -78,11 +80,10 @@ public class MovieRepositoryImpl implements MovieRepository {
         try(Connection connection = DBUtil.open()){
             ResultSet resultSet = DBUtil.select(connection, SQL, null);
             if (resultSet.next()){
-                Integer totalRecords = resultSet.getInt(1);
-                return totalRecords;
+                return resultSet.getInt(1);
             }
             else {
-                return null;
+                throw new ResourceNotFoundException("No hay registros en la BD");
             }
         } catch (SQLException e){
             throw new RuntimeException("Error en el conteo: " + SQL + " " + e.getMessage());
