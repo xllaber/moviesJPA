@@ -10,5 +10,4 @@ public interface MovieService {
     List<Movie> getAll();
     Movie findById(int id);
     Integer getTotalRecords();
-
 }

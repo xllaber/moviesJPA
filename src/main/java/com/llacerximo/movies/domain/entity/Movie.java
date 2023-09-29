@@ -24,7 +24,6 @@ public class Movie {
     }
 
     public Movie(String title, int year, int runTime) {
-        this.id = id;
         this.title = title;
         this.year = year;
         this.runTime = runTime;

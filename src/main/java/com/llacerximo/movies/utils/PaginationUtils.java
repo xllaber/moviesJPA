@@ -16,6 +16,7 @@ import java.util.Optional;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PaginationUtils {
+
     @JsonProperty("Total Records")
     private Integer totalRecords;
     @JsonProperty("Page")
