@@ -6,7 +6,6 @@ import com.llacerximo.movies.exceptions.DBConnectionException;
 import com.llacerximo.movies.exceptions.ResourceNotFoundException;
 import com.llacerximo.movies.exceptions.SQLStatmentException;
 import com.llacerximo.movies.persistence.MovieRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
