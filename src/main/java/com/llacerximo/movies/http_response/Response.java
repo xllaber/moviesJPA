@@ -1,12 +1,11 @@
 
 package com.llacerximo.movies.http_response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.llacerximo.movies.utils.PaginatonUtils;
+import com.llacerximo.movies.utils.PaginationUtils;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -14,9 +13,9 @@ import java.util.Optional;
 public class Response {
 
     private Object data;
-    private PaginatonUtils pagination;
+    private PaginationUtils pagination;
 
-    public Response(Object data, PaginatonUtils pagination) {
+    public Response(Object data, PaginationUtils pagination) {
         this.data = data;
         this.pagination = pagination;
     }

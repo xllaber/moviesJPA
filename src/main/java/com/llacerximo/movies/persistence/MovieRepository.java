@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface MovieRepository {
     List<Movie> getAll();
-    List<Movie> getAllPaginated(Optional<Integer> page);
+    List<Movie> getAllPaginated(Optional<Integer> page, Integer pageSize);
     Integer getTotalRecords();
     Movie findById(int id);
 }

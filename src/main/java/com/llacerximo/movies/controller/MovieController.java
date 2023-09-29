@@ -1,16 +1,14 @@
 package com.llacerximo.movies.controller;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.llacerximo.movies.domain.entity.Movie;
 import com.llacerximo.movies.domain.service.MovieService;
 import com.llacerximo.movies.http_response.Response;
-import com.llacerximo.movies.utils.PaginatonUtils;
+import com.llacerximo.movies.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,12 +23,21 @@ public class MovieController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
-    public Response getAll(@RequestParam Optional<Integer> page) {
+    public Response getAll(@RequestParam Optional<Integer> page, @RequestParam(required = false) Optional<Integer> pageSize) {
 //            System.out.println(movieService.getAll());
-        if (page.isPresent()){
-            return new Response(movieService.getAllPaginated(page), new PaginatonUtils(movieService.getTotalRecords(), LIMIT, page.get()));
+        if (pageSize.isPresent()){
+            Integer pageSizeInput = LIMIT;
+            if (pageSize.isPresent())
+                pageSizeInput = pageSize.get();
+
+            return new Response(movieService.getAllPaginated(page, pageSizeInput), new PaginationUtils(movieService.getTotalRecords(), pageSizeInput, page.get()));
         }
-        return new Response(movieService.getAll(), new PaginatonUtils(movieService.getTotalRecords()));
+        return new Response(movieService.getAll(), new PaginationUtils(movieService.getTotalRecords()));
+
+
+
+//        return new Response(movieService.getAll(), new PaginatonUtils(movieService.getTotalRecords()));
+
     }
 
     @ResponseStatus(HttpStatus.OK)

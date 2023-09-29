@@ -22,8 +22,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> getAllPaginated(Optional<Integer> page) {
-        return movieRepository.getAllPaginated(page);
+    public List<Movie> getAllPaginated(Optional<Integer> page, Integer pageSize) {
+        return movieRepository.getAllPaginated(page, pageSize);
     }
 
     @Override
