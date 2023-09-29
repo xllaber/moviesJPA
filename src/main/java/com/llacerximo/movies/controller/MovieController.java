@@ -24,26 +24,20 @@ public class MovieController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
     public Response getAll(@RequestParam Optional<Integer> page, @RequestParam(required = false) Optional<Integer> pageSize) {
-//            System.out.println(movieService.getAll());
-        if (pageSize.isPresent()){
+        if (page.isPresent()){
             Integer pageSizeInput = LIMIT;
             if (pageSize.isPresent())
                 pageSizeInput = pageSize.get();
 
             return new Response(movieService.getAllPaginated(page, pageSizeInput), new PaginationUtils(movieService.getTotalRecords(), pageSizeInput, page.get()));
         }
+
         return new Response(movieService.getAll(), new PaginationUtils(movieService.getTotalRecords()));
-
-
-
-//        return new Response(movieService.getAll(), new PaginatonUtils(movieService.getTotalRecords()));
-
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     public Movie find(@PathVariable("id") int id) {
-//        System.out.println(movieService.findById(id));
         return movieService.findById(id);
     }
 

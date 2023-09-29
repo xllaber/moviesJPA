@@ -17,9 +17,6 @@ import java.util.Optional;
 @Repository
 public class MovieRepositoryImpl implements MovieRepository {
 
-    @Value("${default.page.size}")
-    private Integer LIMIT;
-
     @Override
     public List<Movie> getAll() {
         final String SQL = "SELECT * FROM movies";

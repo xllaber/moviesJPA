@@ -36,7 +36,7 @@ public class PaginationUtils {
         int totalPages = (int) (Math.ceil((double) totalRecords / pageSize));
         this.totalPages = totalPages;
 
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())). getRequest();
         String url = request.getRequestURL().toString();
         if (page > 1 && totalPages > 1)
             this.previous = url +  "?page=" + (page - 1);
