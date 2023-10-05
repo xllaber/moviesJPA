@@ -13,7 +13,7 @@ public class DirectorServiceImpl implements DirectorService {
     DirectorRepository directorRepository;
 
     @Override
-    public Integer create(Director director) {
+    public Integer insert(Director director) {
         return directorRepository.insert(director);
     }
 }
