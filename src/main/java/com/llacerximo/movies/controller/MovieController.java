@@ -17,28 +17,38 @@ public class MovieController {
 
     @Value("${default.page.size}")
     private Integer LIMIT;
+    @Value("${default.page.num}")
+    private Integer PAGE_NUM;
 
     @Autowired
     MovieService movieService;
 
+//    @ResponseStatus(HttpStatus.OK)
+//    @GetMapping("")
+//    public Response getAll(@RequestParam Optional<Integer> page, @RequestParam(required = false) Optional<Integer> pageSize) {
+//        if (page.isPresent()){
+//            Integer pageSizeInput = LIMIT;
+//            if (pageSize.isPresent())
+//                pageSizeInput = pageSize.get();
+//
+//            return new Response(movieService.getAllPaginated(page, pageSizeInput), new PaginationUtils(movieService.getTotalRecords(), pageSizeInput, page.get()));
+//        }
+//
+//        return new Response(movieService.getAll(), new PaginationUtils(movieService.getTotalRecords()));
+//    }
+
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
-    public Response getAll(@RequestParam Optional<Integer> page, @RequestParam(required = false) Optional<Integer> pageSize) {
-        if (page.isPresent()){
-            Integer pageSizeInput = LIMIT;
-            if (pageSize.isPresent())
-                pageSizeInput = pageSize.get();
-
-            return new Response(movieService.getAllPaginated(page, pageSizeInput), new PaginationUtils(movieService.getTotalRecords(), pageSizeInput, page.get()));
-        }
-
-        return new Response(movieService.getAll(), new PaginationUtils(movieService.getTotalRecords()));
+    public Response getAll(@RequestParam(required = false) Optional<Integer> page, @RequestParam(required = false) Optional<Integer> pageSize) {
+        Integer pageSizeInput = pageSize.orElseGet(() -> LIMIT);
+        Integer pageNum = page.orElseGet(() -> PAGE_NUM);
+        return new Response(movieService.getAllPaginated(pageNum, pageSizeInput), new PaginationUtils(movieService.getTotalRecords(), pageSizeInput, pageNum));
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public Movie find(@PathVariable("id") int id) {
-        return movieService.findById(id);
+    public Response find(@PathVariable("id") int id) {
+        return new Response(movieService.findById(id));
     }
 
 

@@ -42,12 +42,10 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
     @Override
-    public List<Movie> getAllPaginated(Optional<Integer> page, Integer pageSize) {
+    public List<Movie> getAllPaginated(Integer page, Integer pageSize) {
         String sql = "SELECT * FROM movies";
-        if (page.isPresent()){
-            int offset = (page.get() - 1) * pageSize;
-            sql += String.format(" LIMIT %d, %d", offset, pageSize);
-        }
+        int offset = (page - 1) * pageSize;
+        sql += String.format(" LIMIT %d, %d", offset, pageSize);
         List<Movie> movies = new ArrayList<>();
         try (Connection connection = DBUtil.open()){
             ResultSet resultSet = DBUtil.select(connection, sql, null);

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface DirectorRepository {
     List<Director> getAll();
-    List<Director> getAllPaginated(Optional<Integer> page, Integer pageSize);
+    List<Director> getAllPaginated(Integer page, Integer pageSize);
 
     Director getById(Integer id);
 

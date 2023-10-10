@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DirectorService {
-    List<Director> getAllPaginated(Optional<Integer> page, Integer pageSizeInput);
+    List<Director> getAllPaginated(Integer page, Integer pageSizeInput);
 
     List<Director> getAll();
 

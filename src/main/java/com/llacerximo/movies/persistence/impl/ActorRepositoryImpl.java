@@ -44,12 +44,10 @@ public class ActorRepositoryImpl implements ActorRepository {
     }
 
     @Override
-    public List<Actor> getAllPaginated(Optional<Integer> page, Integer pageSize) {
+    public List<Actor> getAllPaginated(Integer page, Integer pageSize) {
         String sql = "SELECT * FROM actors";
-        if (page.isPresent()){
-            int offset = (page.get() - 1) * pageSize;
-            sql += String.format(" LIMIT %d, %d", offset, pageSize);
-        }
+        int offset = (page - 1) * pageSize;
+        sql += String.format(" LIMIT %d, %d", offset, pageSize);
         List<Actor> actors = new ArrayList<>();
         try (Connection connection = DBUtil.open()){
             ResultSet resultSet = DBUtil.select(connection, sql, null);

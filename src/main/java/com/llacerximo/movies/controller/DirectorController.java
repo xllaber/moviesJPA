@@ -17,6 +17,8 @@ public class DirectorController {
 
     @Value("${default.page.size}")
     private Integer LIMIT;
+    @Value("${default.page.num}")
+    private Integer PAGE_NUM;
 
     @Autowired
     DirectorService directorService;
@@ -24,23 +26,17 @@ public class DirectorController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
     public Response getAll(@RequestParam Optional<Integer> page, @RequestParam(required = false) Optional<Integer> pageSize) {
-        if (page.isPresent()){
-            Integer pageSizeInput = LIMIT;
-            if (pageSize.isPresent())
-                pageSizeInput = pageSize.get();
-
-            return new Response(directorService.getAllPaginated(page, pageSizeInput), new PaginationUtils(directorService.getTotalRecords(), pageSizeInput, page.get()));
-        }
-
-        return new Response(directorService.getAll(), new PaginationUtils(directorService.getTotalRecords()));
+        Integer pageSizeInput = pageSize.orElseGet(() -> LIMIT);
+        Integer pageNum = page.orElseGet(() -> PAGE_NUM);
+        return new Response(directorService.getAllPaginated(pageNum, pageSizeInput), new PaginationUtils(directorService.getTotalRecords(), pageSizeInput, pageNum));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public Director insert(@RequestBody Director director){
+    public Response insert(@RequestBody Director director){
         Integer id = directorService.insert(director);
         director.setId(id);
-        return director;
+        return new Response(director);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

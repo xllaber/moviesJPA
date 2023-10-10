@@ -18,6 +18,8 @@ public class ActorController {
 
     @Value("${default.page.size}")
     private Integer LIMIT;
+    @Value("${default.page.num}")
+    private Integer PAGE_NUM;
 
     @Autowired
     ActorService actorService;
@@ -25,23 +27,17 @@ public class ActorController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
     public Response getAll(@RequestParam Optional<Integer> page, @RequestParam(required = false) Optional<Integer> pageSize) {
-        if (page.isPresent()){
-            Integer pageSizeInput = LIMIT;
-            if (pageSize.isPresent())
-                pageSizeInput = pageSize.get();
-
-            return new Response(actorService.getAllPaginated(page, pageSizeInput), new PaginationUtils(actorService.getTotalRecords(), pageSizeInput, page.get()));
-        }
-
-        return new Response(actorService.getAll(), new PaginationUtils(actorService.getTotalRecords()));
+        Integer pageSizeInput = pageSize.orElseGet(() -> LIMIT);
+        Integer pageNum = page.orElseGet(() -> PAGE_NUM);
+        return new Response(actorService.getAllPaginated(pageNum, pageSizeInput), new PaginationUtils(actorService.getTotalRecords(), pageSizeInput, pageNum));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public Actor insert(@RequestBody Actor actor) {
+    public Response insert(@RequestBody Actor actor) {
         Integer id = actorService.insert(actor);
         actor.setId(id);
-        return actor;
+        return new Response(actor);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

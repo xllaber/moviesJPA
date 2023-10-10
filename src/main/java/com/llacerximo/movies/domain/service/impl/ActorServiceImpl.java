@@ -23,7 +23,7 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public List<Actor> getAllPaginated(Optional<Integer> page, Integer pageSizeInput) {
+    public List<Actor> getAllPaginated(Integer page, Integer pageSizeInput) {
         return actorRepository.getAllPaginated(page, pageSizeInput);
     }
 
@@ -50,7 +50,7 @@ public class ActorServiceImpl implements ActorService {
     public void delete(Integer id) {
         Actor existingActor = actorRepository.getById(id);
         if (existingActor == null){
-            throw new ResourceNotFoundException("Director not found");
+            throw new ResourceNotFoundException("Actor not found");
         }
         actorRepository.delete(id);
     }

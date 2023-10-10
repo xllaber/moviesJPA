@@ -17,7 +17,7 @@ public class DirectorServiceImpl implements DirectorService {
     DirectorRepository directorRepository;
 
     @Override
-    public List<Director> getAllPaginated(Optional<Integer> page, Integer pageSizeInput) {
+    public List<Director> getAllPaginated(Integer page, Integer pageSizeInput) {
         return directorRepository.getAllPaginated(page, pageSizeInput);
     }
 

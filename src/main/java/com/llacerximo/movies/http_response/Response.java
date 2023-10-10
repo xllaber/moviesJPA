@@ -19,4 +19,8 @@ public class Response {
         this.pagination = pagination;
     }
 
+    public Response(Object data){
+        this.data = data;
+    }
+
 }

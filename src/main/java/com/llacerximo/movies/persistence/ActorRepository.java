@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ActorRepository {
     List<Actor> getAll();
-    List<Actor>getAllPaginated(Optional<Integer> page, Integer pageSize);
+    List<Actor>getAllPaginated(Integer page, Integer pageSize);
     Actor getById(Integer id);
 
     Integer getTotalRecords();

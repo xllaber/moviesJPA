@@ -44,12 +44,10 @@ public class DirectorRepositoryImpl implements DirectorRepository {
     }
 
     @Override
-    public List<Director> getAllPaginated(Optional<Integer> page, Integer pageSize) {
+    public List<Director> getAllPaginated(Integer page, Integer pageSize) {
         String sql = "SELECT * FROM directors";
-        if (page.isPresent()){
-            int offset = (page.get() - 1) * pageSize;
-            sql += String.format(" LIMIT %d, %d", offset, pageSize);
-        }
+        int offset = (page - 1) * pageSize;
+        sql += String.format(" LIMIT %d, %d", offset, pageSize);
         List<Director> directors = new ArrayList<>();
         try (Connection connection = DBUtil.open()){
             ResultSet resultSet = DBUtil.select(connection, sql, null);

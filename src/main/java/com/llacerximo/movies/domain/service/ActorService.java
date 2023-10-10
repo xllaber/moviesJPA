@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ActorService {
     List<Actor> getAll();
 
-    List<Actor> getAllPaginated(Optional<Integer> page, Integer pageSizeInput);
+    List<Actor> getAllPaginated(Integer page, Integer pageSizeInput);
 
     Integer getTotalRecords();
 
