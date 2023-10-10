@@ -39,7 +39,7 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public void update(Actor actor) {
-        Actor existingActor = actor;
+        Actor existingActor = actorRepository.getById(actor.getId());
         if (existingActor == null){
             throw new ResourceNotFoundException("Actor not found: " + actor.getId());
         }
