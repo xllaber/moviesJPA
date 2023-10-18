@@ -1,35 +1,24 @@
 package com.llacerximo.movies.controller;
 
 import com.llacerximo.movies.domain.entity.Actor;
-import com.llacerximo.movies.domain.entity.Actor;
 import com.llacerximo.movies.domain.service.ActorService;
 import com.llacerximo.movies.http_response.Response;
 import com.llacerximo.movies.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/actors")
 public class ActorController {
-
-    @Value("${default.page.size}")
-    private Integer LIMIT;
-    @Value("${default.page.num}")
-    private Integer PAGE_NUM;
 
     @Autowired
     ActorService actorService;
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
-    public Response getAll(@RequestParam Optional<Integer> page, @RequestParam(required = false) Optional<Integer> pageSize) {
-        Integer pageSizeInput = pageSize.orElseGet(() -> LIMIT);
-        Integer pageNum = page.orElseGet(() -> PAGE_NUM);
-        return new Response(actorService.getAllPaginated(pageNum, pageSizeInput), new PaginationUtils(actorService.getTotalRecords(), pageSizeInput, pageNum));
+    public Response getAll(@RequestParam(required = false, defaultValue = "1") Integer page, @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        return new Response(actorService.getAllPaginated(page, pageSize), new PaginationUtils(actorService.getTotalRecords(), pageSize, page));
     }
 
     @ResponseStatus(HttpStatus.CREATED)

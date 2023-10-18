@@ -9,7 +9,7 @@ public interface DirectorRepository {
     List<Director> getAll();
     List<Director> getAllPaginated(Integer page, Integer pageSize);
 
-    Director getById(Integer id);
+    Optional<Director> getById(Integer id);
 
     Integer insert(Director director);
 

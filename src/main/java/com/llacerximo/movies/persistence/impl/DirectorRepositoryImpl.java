@@ -71,19 +71,20 @@ public class DirectorRepositoryImpl implements DirectorRepository {
     }
 
     @Override
-    public Director getById(Integer id) {
+    public Optional<Director> getById(Integer id) {
         final String SQL = "SELECT * FROM directors WHERE id = ? LIMIT 1";
         try (Connection connection = DBUtil.open()){
             ResultSet resultSet = DBUtil.select(connection, SQL, List.of(id));
             if(resultSet.next()) {
-                return new Director(
+                Director director = new Director(
                         resultSet.getString("name"),
                         resultSet.getInt("birthYear"),
                         resultSet.getInt("deathYear"),
                         resultSet.getInt("id")
                 );
+                return Optional.of(director);
             } else {
-                return null;
+                return Optional.empty();
             }
         } catch (SQLException e) {
             throw new SQLStatmentException("SQL: " + SQL);

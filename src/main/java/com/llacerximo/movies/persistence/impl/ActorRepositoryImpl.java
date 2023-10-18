@@ -2,7 +2,6 @@ package com.llacerximo.movies.persistence.impl;
 
 import com.llacerximo.movies.db.DBUtil;
 import com.llacerximo.movies.domain.entity.Actor;
-import com.llacerximo.movies.domain.entity.Actor;
 import com.llacerximo.movies.exceptions.DBConnectionException;
 import com.llacerximo.movies.exceptions.ResourceNotFoundException;
 import com.llacerximo.movies.exceptions.SQLStatmentException;
@@ -71,19 +70,20 @@ public class ActorRepositoryImpl implements ActorRepository {
     }
 
     @Override
-    public Actor getById(Integer id) {
+    public Optional<Actor> getById(Integer id) {
         final String SQL = "SELECT * FROM actors WHERE id = ? LIMIT 1";
         try (Connection connection = DBUtil.open()){
             ResultSet resultSet = DBUtil.select(connection, SQL, List.of(id));
             if(resultSet.next()) {
-                return new Actor(
+                Actor actor = new Actor(
                         resultSet.getString("name"),
                         resultSet.getInt("birthYear"),
                         resultSet.getInt("deathYear"),
                         resultSet.getInt("id")
                 );
+                return Optional.of(actor);
             } else {
-                return null;
+                return Optional.empty();
             }
         } catch (SQLException e) {
             throw new SQLStatmentException("SQL: " + SQL);
