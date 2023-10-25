@@ -8,6 +8,6 @@ import java.util.Optional;
 public interface MovieService {
     List<Movie> getAllPaginated(Integer page, Integer pageSize);
     List<Movie> getAll();
-    Movie findById(int id);
+    Movie findById(Integer id);
     Integer getTotalRecords();
 }

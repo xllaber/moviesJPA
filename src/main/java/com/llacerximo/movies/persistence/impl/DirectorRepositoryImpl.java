@@ -5,7 +5,7 @@ import com.llacerximo.movies.domain.entity.Director;
 import com.llacerximo.movies.exceptions.DBConnectionException;
 import com.llacerximo.movies.exceptions.ResourceNotFoundException;
 import com.llacerximo.movies.exceptions.SQLStatmentException;
-import com.llacerximo.movies.persistence.DirectorRepository;
+import com.llacerximo.movies.domain.repository.DirectorRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -79,7 +79,7 @@ public class DirectorRepositoryImpl implements DirectorRepository {
                 Director director = new Director(
                         resultSet.getString("name"),
                         resultSet.getInt("birthYear"),
-                        resultSet.getInt("deathYear"),
+                        (resultSet.getObject("deathYear") != null) ? resultSet.getInt("deathYear") : null,
                         resultSet.getInt("id")
                 );
                 return Optional.of(director);

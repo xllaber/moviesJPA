@@ -5,7 +5,7 @@ import com.llacerximo.movies.domain.entity.Movie;
 import com.llacerximo.movies.exceptions.DBConnectionException;
 import com.llacerximo.movies.exceptions.ResourceNotFoundException;
 import com.llacerximo.movies.exceptions.SQLStatmentException;
-import com.llacerximo.movies.persistence.MovieRepository;
+import com.llacerximo.movies.domain.repository.MovieRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -84,7 +84,7 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
     @Override
-    public Movie findById(int id) {
+    public Movie findById(Integer id) {
         final String SQL = "SELECT * FROM movies WHERE id = ? LIMIT 1";
         try (Connection connection = DBUtil.open()){
             ResultSet resultSet = DBUtil.select(connection, SQL, List.of(id));

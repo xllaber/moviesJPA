@@ -1,6 +1,7 @@
 package com.llacerximo.movies.domain.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -9,23 +10,27 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Movie {
 
-    private int id;
+    private Integer id;
     private String title;
-    private int year;
-    private int runTime;
+    private Integer year;
+    private Integer runtime;
+    private Director director;
+    private List<Actor> actors;
 
-    public Movie(int id, String title, int year, int runTime) {
+    public Movie(Integer id, String title, Integer year, Integer runtime) {
         this.id = id;
         this.title = title;
         this.year = year;
-        this.runTime = runTime;
+        this.runtime = runtime;
     }
 
-    public Movie(String title, int year, int runTime) {
+    public Movie(String title, Integer year, Integer runtime) {
         this.title = title;
         this.year = year;
-        this.runTime = runTime;
+        this.runtime = runtime;
     }
+
 }

@@ -10,6 +10,8 @@ public interface ActorService {
 
     List<Actor> getAllPaginated(Integer page, Integer pageSizeInput);
 
+    Actor getById(Integer id);
+
     Integer getTotalRecords();
 
     Integer insert(Actor actor);

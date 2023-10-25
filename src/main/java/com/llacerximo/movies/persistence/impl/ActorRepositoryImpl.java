@@ -5,7 +5,7 @@ import com.llacerximo.movies.domain.entity.Actor;
 import com.llacerximo.movies.exceptions.DBConnectionException;
 import com.llacerximo.movies.exceptions.ResourceNotFoundException;
 import com.llacerximo.movies.exceptions.SQLStatmentException;
-import com.llacerximo.movies.persistence.ActorRepository;
+import com.llacerximo.movies.domain.repository.ActorRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;

@@ -1,4 +1,4 @@
-package com.llacerximo.movies.persistence;
+package com.llacerximo.movies.domain.repository;
 
 import com.llacerximo.movies.domain.entity.Director;
 
