@@ -78,7 +78,7 @@ public class ActorRepositoryImpl implements ActorRepository {
                 Actor actor = new Actor(
                         resultSet.getString("name"),
                         resultSet.getInt("birthYear"),
-                        resultSet.getInt("deathYear"),
+                        (resultSet.getObject("deathYear") != null) ? resultSet.getInt("deathYear") : null,
                         resultSet.getInt("id")
                 );
                 return Optional.of(actor);

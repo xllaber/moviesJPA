@@ -1,5 +1,7 @@
 package com.llacerximo.movies.controller;
 
+import com.llacerximo.movies.controller.model.director.DirectorCreateWeb;
+import com.llacerximo.movies.controller.model.director.DirectorDetailWeb;
 import com.llacerximo.movies.controller.model.director.DirectorListWeb;
 import com.llacerximo.movies.domain.entity.Director;
 import com.llacerximo.movies.domain.service.DirectorService;
@@ -37,11 +39,15 @@ public class DirectorController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public Response insert(@RequestBody Director director){
-//        return new Response(DirectorMapper.mapper.toDirectorDetailWeb(directorService.getById(dire)))
-        Integer id = directorService.insert(director);
-        director.setId(id);
-        return new Response(director);
+    public Response insert(@RequestBody DirectorCreateWeb director){
+        Integer id = directorService.insert(DirectorMapper.mapper.toDirector(director));
+        DirectorDetailWeb directorDetailWeb = new DirectorDetailWeb(
+                id,
+                director.getName(),
+                director.getBirthYear(),
+                director.getDeathYear()
+        );
+        return new Response(directorDetailWeb);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

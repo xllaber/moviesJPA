@@ -1,5 +1,7 @@
 package com.llacerximo.movies.controller;
 
+import com.llacerximo.movies.controller.model.actor.ActorCreateWeb;
+import com.llacerximo.movies.controller.model.actor.ActorDetailWeb;
 import com.llacerximo.movies.controller.model.actor.ActorListWeb;
 import com.llacerximo.movies.domain.entity.Actor;
 import com.llacerximo.movies.domain.service.ActorService;
@@ -40,10 +42,15 @@ public class ActorController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public Response insert(@RequestBody Actor actor) {
-        Integer id = actorService.insert(actor);
-        actor.setId(id);
-        return new Response(actor);
+    public Response insert(@RequestBody ActorCreateWeb actor) {
+        Integer id = actorService.insert(ActorMapper.mapper.toActor(actor));
+        ActorDetailWeb actorDetailWeb = new ActorDetailWeb(
+                id,
+                actor.getName(),
+                actor.getBirthYear(),
+                actor.getDeathYear()
+        );
+        return new Response(actorDetailWeb);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
