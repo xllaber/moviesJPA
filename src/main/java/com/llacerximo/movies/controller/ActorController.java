@@ -25,12 +25,18 @@ public class ActorController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
     public Response getAll(@RequestParam(required = false, defaultValue = "1") Integer page, @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        PaginationUtils pagination = PaginationUtils.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .totalRecords(actorService.getTotalRecords())
+                .build();
+        pagination.setNextAndPrevious(pagination.getTotalRecords(), page);
         return  new Response(
             actorService.getAllPaginated(page, pageSize)
                     .stream()
                     .map(ActorMapper.mapper::toActorListWeb)
                     .toList(),
-            new PaginationUtils(actorService.getTotalRecords(), page, pageSize)
+            pagination
         );
     }
 

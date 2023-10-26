@@ -27,7 +27,16 @@ public class MovieController {
         List<MovieListWeb> movieWeb = movies.stream()
                 .map(MovieMapper.mapper::toMovieListWeb)
                 .toList();
-        return new Response(movieWeb, new PaginationUtils(movieService.getTotalRecords(), pageSize, page));
+        PaginationUtils pagination = PaginationUtils.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .totalRecords(movieService.getTotalRecords())
+                .build();
+        System.out.println(pagination.getTotalRecords());
+        pagination.setNextAndPrevious(pagination.getTotalRecords(), page);
+//        return new Response(movieWeb, new PaginationUtils(movieService.getTotalRecords(), pageSize, page));
+        return new Response(movieWeb, pagination);
+
     }
 
     @ResponseStatus(HttpStatus.OK)

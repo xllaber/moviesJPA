@@ -10,7 +10,6 @@ import org.mapstruct.factory.Mappers;
 public interface MovieMapper {
 
     MovieMapper mapper = Mappers.getMapper(MovieMapper.class);
-
     MovieListWeb toMovieListWeb(Movie movie);
     MovieDetailWeb toMovieDetailWeb(Movie movie);
 

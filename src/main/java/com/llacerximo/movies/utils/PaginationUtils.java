@@ -3,6 +3,7 @@ package com.llacerximo.movies.utils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -13,6 +14,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder
 public class PaginationUtils {
 
     @JsonProperty("Total Records")
@@ -28,23 +30,29 @@ public class PaginationUtils {
     @JsonProperty("Previous page")
     private String previous;
 
-    public PaginationUtils(Integer totalRecords, Integer pageSize, Integer page) {
-        this.totalRecords = totalRecords;
-        this.page = page;
-        this.pageSize = pageSize;
-        int totalPages = (int) (Math.ceil((double) totalRecords / pageSize));
-        this.totalPages = totalPages;
+//    public PaginationUtils(Integer totalRecords, Integer pageSize, Integer page) {
+//        this.totalRecords = totalRecords;
+//        this.page = page;
+//        this.pageSize = pageSize;
+//        int totalPages = (int) (Math.ceil((double) totalRecords / pageSize));
+//        this.totalPages = totalPages;
+//
+//        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())). getRequest();
+//        String url = request.getRequestURL().toString();
+//        if (page > 1 && totalPages > 1)
+//            this.previous = url +  "?page=" + (page - 1);
+//        if (page < totalPages)
+//            this.next = url +  "?page=" + (page + 1);
+//    }
 
+    public void setNextAndPrevious(Integer totalRecords, Integer page) {
+        int totalPages = (int) (Math.ceil((double) totalRecords / pageSize));
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())). getRequest();
         String url = request.getRequestURL().toString();
         if (page > 1 && totalPages > 1)
             this.previous = url +  "?page=" + (page - 1);
         if (page < totalPages)
             this.next = url +  "?page=" + (page + 1);
-    }
-
-    public PaginationUtils(Integer totalRecords){
-        this.totalRecords = totalRecords;
     }
 
 }

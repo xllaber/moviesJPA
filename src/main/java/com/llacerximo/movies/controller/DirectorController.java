@@ -28,7 +28,13 @@ public class DirectorController {
                 .stream()
                 .map(DirectorMapper.mapper::toDirectorListWeb)
                 .toList();
-        return new Response(directorListWeb, new PaginationUtils(directorService.getTotalRecords(), pageSize, page));
+        PaginationUtils pagination = PaginationUtils.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .totalRecords(directorService.getTotalRecords())
+                .build();
+        pagination.setNextAndPrevious(pagination.getTotalRecords(), page);
+        return new Response(directorListWeb, pagination);
     }
 
     @ResponseStatus(HttpStatus.OK)
