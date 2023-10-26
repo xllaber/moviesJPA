@@ -9,5 +9,5 @@ public interface MovieRepository {
     List<Movie> getAll();
     List<Movie> getAllPaginated(Integer page, Integer pageSize);
     Integer getTotalRecords();
-    Movie findById(Integer id);
+    Optional<Movie> findById(Integer id);
 }
