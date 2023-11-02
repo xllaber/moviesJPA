@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Mapper(componentModel = "spring")
 public interface MovieMapper {
@@ -21,6 +22,6 @@ public interface MovieMapper {
     @Mapping(target = "title", expression = "java(resultSet.getString(\"title\"))")
     @Mapping(target = "year", expression = "java(resultSet.getInt(\"year\"))")
     @Mapping(target = "runtime", expression = "java(resultSet.getInt(\"runtime\"))")
-    MovieEntity toMovieEntity(ResultSet resultSet);
+    MovieEntity toMovieEntity(ResultSet resultSet) throws SQLException;
     Movie toMovie(MovieEntity movieEntity);
 }

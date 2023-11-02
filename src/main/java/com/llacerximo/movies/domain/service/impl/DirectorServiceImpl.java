@@ -21,11 +21,6 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public List<Director> getAll() {
-        return directorRepository.getAll();
-    }
-
-    @Override
     public Director getById(Integer id) {
         return directorRepository.getById(id).orElseThrow(() -> new ResourceNotFoundException("Director con id " + id + " mo encontrado"));
     }

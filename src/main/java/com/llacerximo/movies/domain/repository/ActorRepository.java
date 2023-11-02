@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ActorRepository {
-    List<Actor> getAll();
+//    List<Actor> getAll();
     List<Actor>getAllPaginated(Integer page, Integer pageSize);
     Optional<Actor> getById(Integer id);
 
@@ -17,4 +17,6 @@ public interface ActorRepository {
     void update(Actor actor);
 
     void delete(Integer id);
+
+    Optional<Actor> getByMovieId(Integer movieId);
 }

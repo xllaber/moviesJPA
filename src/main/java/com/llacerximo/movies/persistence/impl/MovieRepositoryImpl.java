@@ -22,30 +22,30 @@ public class MovieRepositoryImpl implements MovieRepository {
     @Autowired
     MovieDAO movieDAO;
 
-    @Override
-    public List<Movie> getAll() {
-        final String SQL = "SELECT * FROM movies";
-        List<Movie> movies = new ArrayList<>();
-        try (Connection connection = DBUtil.open()){
-            ResultSet resultSet = DBUtil.select(connection, SQL, null);
-            while (resultSet.next()) {
-                movies.add(
-                        new Movie(
-                                resultSet.getInt("id"),
-                                resultSet.getString("title"),
-                                resultSet.getInt("year"),
-                                resultSet.getInt("runtime")
-                        )
-                );
-            }
-            DBUtil.close(connection);
-            return movies;
-        } catch (DBConnectionException e) {
-            throw e;
-        } catch (SQLException e) {
-            throw new SQLStatmentException("SQL: " + SQL);
-        }
-    }
+//    @Override
+//    public List<Movie> getAll() {
+//        final String SQL = "SELECT * FROM movies";
+//        List<Movie> movies = new ArrayList<>();
+//        try (Connection connection = DBUtil.open()){
+//            ResultSet resultSet = DBUtil.select(connection, SQL, null);
+//            while (resultSet.next()) {
+//                movies.add(
+//                        new Movie(
+//                                resultSet.getInt("id"),
+//                                resultSet.getString("title"),
+//                                resultSet.getInt("year"),
+//                                resultSet.getInt("runtime")
+//                        )
+//                );
+//            }
+//            DBUtil.close(connection);
+//            return movies;
+//        } catch (DBConnectionException e) {
+//            throw e;
+//        } catch (SQLException e) {
+//            throw new SQLStatmentException("SQL: " + SQL);
+//        }
+//    }
 
     @Override
     public List<Movie> getAllPaginated(Integer page, Integer pageSize) {

@@ -17,11 +17,6 @@ public class ActorServiceImpl implements ActorService {
     ActorRepository actorRepository;
 
     @Override
-    public List<Actor> getAll() {
-        return actorRepository.getAll();
-    }
-
-    @Override
     public List<Actor> getAllPaginated(Integer page, Integer pageSizeInput) {
         return actorRepository.getAllPaginated(page, pageSizeInput);
     }

@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MovieService {
+
     List<Movie> getAllPaginated(Integer page, Integer pageSize);
-    List<Movie> getAll();
     Movie findById(Integer id);
     Integer getTotalRecords();
+
 }

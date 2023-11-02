@@ -16,23 +16,13 @@ public class MovieServiceImpl implements MovieService {
     MovieRepository movieRepository;
 
     @Override
-    public List<Movie> getAll() {
-        return movieRepository.getAll();
-    }
-
-    @Override
     public List<Movie> getAllPaginated(Integer page, Integer pageSize) {
         return movieRepository.getAllPaginated(page, pageSize);
     }
 
     @Override
     public Movie findById(Integer id) {
-        Movie movie = movieRepository.findById(id);
-        System.out.println(movie);
-        if (movie == null){
-            throw new ResourceNotFoundException("Movie with id " + id + " not found");
-        }
-        return movie;
+        return movieRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado la pelicula con id: " + id));
     }
 
     public Integer getTotalRecords(){

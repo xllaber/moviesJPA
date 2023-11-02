@@ -3,9 +3,11 @@ package com.llacerximo.movies.persistence.impl;
 import com.llacerximo.movies.db.DBUtil;
 import com.llacerximo.movies.domain.entity.Director;
 import com.llacerximo.movies.exceptions.DBConnectionException;
-import com.llacerximo.movies.exceptions.ResourceNotFoundException;
-import com.llacerximo.movies.exceptions.SQLStatmentException;
 import com.llacerximo.movies.domain.repository.DirectorRepository;
+import com.llacerximo.movies.mapper.DirectorMapper;
+import com.llacerximo.movies.persistence.DAO.DirectorDAO;
+import com.llacerximo.movies.persistence.model.DirectorEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -18,126 +20,94 @@ import java.util.Optional;
 @Repository
 public class DirectorRepositoryImpl implements DirectorRepository {
 
-    @Override
-    public List<Director> getAll() {
-        final String SQL = "SELECT * FROM directors";
-        List<Director> directors = new ArrayList<>();
-        try (Connection connection = DBUtil.open()){
-            ResultSet resultSet = DBUtil.select(connection, SQL, null);
-            while (resultSet.next()) {
-                directors.add(
-                        new Director(
-                                resultSet.getString("name"),
-                                resultSet.getInt("birthYear"),
-                                resultSet.getInt("deathYear"),
-                                resultSet.getInt("id")
-                        )
-                );
-            }
-            DBUtil.close(connection);
-            return directors;
-        } catch (DBConnectionException e) {
-            throw e;
-        } catch (SQLException e) {
-            throw new SQLStatmentException("SQL: " + SQL);
-        }
-    }
+    @Autowired
+    DirectorDAO directorDAO;
+
+//    @Override
+//    public List<Director> getAll() {
+//        final String SQL = "SELECT * FROM directors";
+//        List<Director> directors = new ArrayList<>();
+//        try (Connection connection = DBUtil.open()){
+//            ResultSet resultSet = DBUtil.select(connection, SQL, null);
+//            while (resultSet.next()) {
+//                directors.add(
+//                        new Director(
+//                                resultSet.getString("name"),
+//                                resultSet.getInt("birthYear"),
+//                                resultSet.getInt("deathYear"),
+//                                resultSet.getInt("id")
+//                        )
+//                );
+//            }
+//            DBUtil.close(connection);
+//            return directors;
+//        } catch (DBConnectionException e) {
+//            throw e;
+//        } catch (SQLException e) {
+//            throw new SQLStatmentException("SQL: " + SQL);
+//        }
+//    }
 
     @Override
     public List<Director> getAllPaginated(Integer page, Integer pageSize) {
-        String sql = "SELECT * FROM directors";
-        int offset = (page - 1) * pageSize;
-        sql += String.format(" LIMIT %d, %d", offset, pageSize);
-        List<Director> directors = new ArrayList<>();
-        try (Connection connection = DBUtil.open()){
-            ResultSet resultSet = DBUtil.select(connection, sql, null);
-            while (resultSet.next()) {
-                directors.add(
-                        new Director(
-                                resultSet.getString("name"),
-                                resultSet.getInt("birthYear"),
-                                resultSet.getInt("deathYear"),
-                                resultSet.getInt("id")
-                        )
-                );
-            }
-            DBUtil.close(connection);
-            return directors;
+        try (Connection connection = DBUtil.open(true)){
+            List<DirectorEntity> directorEntities = directorDAO.getAllPaginated(connection, page, pageSize);
+            return directorEntities.stream()
+                    .map(directorEntity -> DirectorMapper.mapper.toDirector(directorEntity))
+                    .toList();
         } catch (DBConnectionException e) {
             throw e;
         } catch (SQLException e) {
-            throw new SQLStatmentException("SQL: " + sql);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public Optional<Director> getById(Integer id) {
-        final String SQL = "SELECT * FROM directors WHERE id = ? LIMIT 1";
-        try (Connection connection = DBUtil.open()){
-            ResultSet resultSet = DBUtil.select(connection, SQL, List.of(id));
-            if(resultSet.next()) {
-                Director director = new Director(
-                        resultSet.getString("name"),
-                        resultSet.getInt("birthYear"),
-                        (resultSet.getObject("deathYear") != null) ? resultSet.getInt("deathYear") : null,
-                        resultSet.getInt("id")
-                );
-                return Optional.of(director);
-            } else {
+        try (Connection connection = DBUtil.open(true)){
+            Optional<DirectorEntity> directorEntity = directorDAO.findById(connection, id);
+            if (directorEntity.isEmpty())
                 return Optional.empty();
-            }
+            return Optional.ofNullable(DirectorMapper.mapper.toDirector(directorEntity.get()));
         } catch (SQLException e) {
-            throw new SQLStatmentException("SQL: " + SQL);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public Integer getTotalRecords() {
-        final String SQL = "SELECT COUNT(*) FROM directors";
-        try(Connection connection = DBUtil.open()){
-            ResultSet resultSet = DBUtil.select(connection, SQL, null);
-            if (resultSet.next()){
-                return resultSet.getInt(1);
-            }
-            else {
-                throw new ResourceNotFoundException("No hay registros en la BD");
-            }
+        try(Connection connection = DBUtil.open(true)){
+            return directorDAO.getTotalRecords(connection);
         } catch (SQLException e){
-            throw new RuntimeException("Error en el conteo: " + SQL + " " + e.getMessage());
+            throw new RuntimeException("Error en el conteo" + e.getMessage());
         }
     }
 
     @Override
     public Integer insert(Director director) {
-        final String SQL = "INSERT INTO directors (name, birthYear, deathYear) VALUES (?, ?, ?)";
-        List<Object> params = new ArrayList<>();
-        params.add(director.getName());
-        params.add(director.getBirthYear());
-        params.add(director.getDeathYear());
-        Connection connection = DBUtil.open();
-        Integer id = DBUtil.insert(connection, SQL, params);
+        Connection connection = DBUtil.open(true);
+        Integer id = directorDAO.insert(connection, DirectorMapper.mapper.toDirectorEntity(director));
         DBUtil.close(connection);
         return id;
     }
 
     @Override
     public void update(Director director) {
-        final String SQL = "UPDATE directors SET name = ?, birthYear = ?, deathYear = ? WHERE id = ?";
-        Connection connection = DBUtil.open();
-        List<Object> params = new ArrayList<>();
-        params.add(director.getName());
-        params.add(director.getBirthYear());
-        params.add(director.getDeathYear());
-        params.add(director.getId());
-        DBUtil.update(connection, SQL, params);
+        Connection connection = DBUtil.open(true);
+        directorDAO.update(connection, DirectorMapper.mapper.toDirectorEntity(director));
         DBUtil.close(connection);
     }
 
     @Override
     public void delete(Integer id) {
-        final String SQL = "DELETE FROM directors WHERE id = ?";
-        Connection connection = DBUtil.open();
-        DBUtil.delete(connection, SQL, List.of(id));
+        Connection connection = DBUtil.open(true);
+        directorDAO.delete(connection, id);
         DBUtil.close(connection);
+    }
+
+    @Override
+    public Optional<Director> getByMovieId(Integer movieId) {
+        Connection connection = DBUtil.open(true);
+        return Optional.ofNullable(DirectorMapper.mapper.toDirector(directorDAO.findByMovieId(connection, movieId).get()));
     }
 }

@@ -18,14 +18,12 @@ import java.util.Optional;
 public class MovieDAO {
 
     public List<MovieEntity> getAllPaginated(Connection connection, Integer page, Integer pageSize) {
-        List<Object> params = null;
         String sql = "SELECT * FROM movies";
         int offset = (page - 1) * pageSize;
         sql += String.format(" LIMIT %d, %d", offset, pageSize);
-        params = List.of(offset, pageSize);
         List<MovieEntity> movieEntities = new ArrayList<>();
         try {
-            ResultSet resultSet = DBUtil.select(connection, sql, params);
+            ResultSet resultSet = DBUtil.select(connection, sql, null);
             while (resultSet.next()) {
                 movieEntities.add(MovieMapper.mapper.toMovieEntity(resultSet));
             }
@@ -34,7 +32,7 @@ public class MovieDAO {
         } catch (DBConnectionException e) {
             throw e;
         } catch (SQLException e) {
-            throw new SQLStatmentException("SQL: " + sql);
+            throw new SQLStatmentException("SQL: " + sql + e.getMessage());
         }
     }
 
@@ -44,7 +42,7 @@ public class MovieDAO {
             ResultSet resultSet = DBUtil.select(connection, SQL, List.of(id));
             return Optional.ofNullable(resultSet.next() ? MovieMapper.mapper.toMovieEntity(resultSet) : null);
         } catch (SQLException e) {
-            throw new SQLStatmentException("SQL: " + SQL);
+            throw new SQLStatmentException("SQL: " + SQL + e.getMessage());
         }
     }
 
@@ -55,7 +53,7 @@ public class MovieDAO {
             resultSet.next();
             return resultSet.getInt(1);
         } catch (SQLException e) {
-            throw new RuntimeException("SQL: " + SQL);
+            throw new RuntimeException("SQL: " + SQL + e.getMessage());
         }
     }
 }

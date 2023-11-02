@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DirectorService {
+
     List<Director> getAllPaginated(Integer page, Integer pageSizeInput);
 
-    List<Director> getAll();
 
     Director getById(Integer id);
 
@@ -20,4 +20,5 @@ public interface DirectorService {
     void delete(Integer id);
 
     Integer getTotalRecords();
+
 }

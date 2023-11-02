@@ -48,7 +48,7 @@ public class DBUtil {
             PreparedStatement preparedStatement = setParameters(connection, sql, values);
             return preparedStatement.executeQuery();            
         } catch (Exception e) {
-            throw new RuntimeException("Error al ejecutar la sentencia: " + sql);
+            throw new RuntimeException("Error al ejecutar la sentencia: " + sql + e.getMessage());
         }
     }
 
@@ -60,7 +60,7 @@ public class DBUtil {
             if(resultSet.next()){
                 return resultSet.getInt(1);
             } else {
-                throw new RuntimeException("No se puede leer el último id generado");
+                throw new RuntimeException("No se puede leer el último id generado ");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
