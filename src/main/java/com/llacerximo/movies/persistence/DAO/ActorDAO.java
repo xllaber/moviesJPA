@@ -73,17 +73,21 @@ public class ActorDAO {
         DBUtil.close(connection);
     }
 
-    public Optional<ActorEntity> findByMovieId(Connection connection, int movieId) {
+    public List<ActorEntity> findByMovieId(Connection connection, int movieId) {
+        List<ActorEntity> actorEntities = new ArrayList<>();
         final String SQL = """
             SELECT a.* FROM actors a 
             INNER JOIN  actors_movies ma ON ma.actor_id = a.id
             INNER JOIN movies m ON ma.movie_id = m.id
             WHERE m.id = ?
-            LIMIT 1
         """;
         try{
             ResultSet resultSet = DBUtil.select(connection, SQL, List.of(movieId));
-            return Optional.ofNullable(resultSet.next()? ActorMapper.mapper.toActorEntity(resultSet):null);
+            while(resultSet.next()){
+                actorEntities.add(ActorMapper.mapper.toActorEntity(resultSet));
+            }
+            DBUtil.close(connection);
+            return actorEntities;
         } catch (SQLException e) {
             throw new RuntimeException();
         }

@@ -10,4 +10,8 @@ public interface MovieRepository {
     List<Movie> getAllPaginated(Integer page, Integer pageSize);
     Integer getTotalRecords();
     Optional<Movie> findById(Integer id);
+
+    Integer insert(Movie movie);
+
+    void update(Movie movie);
 }

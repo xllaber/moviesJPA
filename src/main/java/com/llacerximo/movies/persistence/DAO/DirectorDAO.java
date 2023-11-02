@@ -56,16 +56,6 @@ public class DirectorDAO {
         return id;
     }
 
-//    public Optional<DirectorEntity> findById(Connection connection, int id) {
-//        final String SQL = "SELECT * FROM directors WHERE id = ? LIMIT 1";
-//        try {
-//            ResultSet resultSet = DBUtil.select(connection, SQL, List.of(id));
-//            return Optional.ofNullable(resultSet.next()? DirectorMapper.mapper.toDirectorEntity(resultSet):null);
-//        } catch (SQLException e) {
-//            throw new RuntimeException();
-//        }
-//    }
-
     public void update(Connection connection, DirectorEntity directorEntity) {
         final String SQL = "UPDATE directors SET name = ?, birthYear = ?, deathYear = ? WHERE id = ?";
         List<Object> params = new ArrayList<>();

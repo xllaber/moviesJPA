@@ -11,4 +11,7 @@ public interface MovieService {
     Movie findById(Integer id);
     Integer getTotalRecords();
 
+    Integer insert(Movie movie, Integer directorId, List<Integer> actorIds);
+
+    void update(Movie movie);
 }

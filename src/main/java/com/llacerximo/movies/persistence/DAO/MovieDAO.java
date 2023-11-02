@@ -56,4 +56,48 @@ public class MovieDAO {
             throw new RuntimeException("SQL: " + SQL + e.getMessage());
         }
     }
+
+    public Integer insert(Connection connection, MovieEntity movieEntity) throws SQLException {
+        try {
+            final String SQL = "INSERT INTO movies (title, year, runtime, director_id) VALUES (?, ?, ?, ?)";
+            List<Object> params = new ArrayList<>();
+            params.add(movieEntity.getTitle());
+            params.add(movieEntity.getYear());
+            params.add(movieEntity.getRuntime());
+            params.add(movieEntity.getDirectorId());
+            Integer id =  DBUtil.insert(connection, SQL, params);
+            movieEntity.getActorIds().stream()
+                    .forEach(actorId -> addActor(connection, id, actorId));
+            connection.commit();
+            return id;
+        } catch (Exception e){
+            connection.rollback();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public void addActor(Connection connection, Integer movieId, Integer actorId){
+        final String SQL = "insert into actors_movies (actor_id, movie_id) values (?, ?)";
+        DBUtil.insert(connection, SQL, List.of(actorId, movieId));
+    }
+
+    public void update(Connection connection, MovieEntity movieEntity) {
+        String sql = "update movies set title = ?, year = ?, runtime = ?, director_id = ?";
+        List<Object> params = new ArrayList<>();
+        params.add(movieEntity.getTitle());
+        params.add(movieEntity.getYear());
+        params.add(movieEntity.getRuntime());
+        params.add(movieEntity.getDirectorId());
+        DBUtil.update(connection, sql, params);
+        DBUtil.close(connection);
+    }
+
+    public void delete(Connection connection, MovieEntity movieEntity) {
+        String sql = "delete from movies where id = ?";
+        String sqlActors = "delete form actors_movies where movie_id = ?";
+        List<Object> params = List.of(movieEntity.getId());
+        DBUtil.delete(connection, sql, params);
+        DBUtil.delete(connection, sqlActors, params);
+        DBUtil.close(connection);
+    }
 }

@@ -1,5 +1,7 @@
 package com.llacerximo.movies.controller;
 
+import com.llacerximo.movies.controller.model.actor.ActorCreateWeb;
+import com.llacerximo.movies.controller.model.movie.MovieCreateWeb;
 import com.llacerximo.movies.controller.model.movie.MovieDetailWeb;
 import com.llacerximo.movies.controller.model.movie.MovieListWeb;
 import com.llacerximo.movies.domain.entity.Movie;
@@ -34,7 +36,6 @@ public class MovieController {
                 .build();
         System.out.println(pagination.getTotalRecords());
         pagination.setNextAndPrevious(pagination.getTotalRecords(), page);
-//        return new Response(movieWeb, new PaginationUtils(movieService.getTotalRecords(), pageSize, page));
         return new Response(movieWeb, pagination);
 
     }
@@ -46,5 +47,24 @@ public class MovieController {
         return new Response(movieDetailWeb);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("")
+    public Response insert(@RequestBody MovieCreateWeb movieCreateWeb) {
+        Integer id = movieService.insert(
+                MovieMapper.mapper.toMovie(movieCreateWeb),
+                movieCreateWeb.getDirectorId(),
+                movieCreateWeb.getActorIds()
+        );
+        MovieListWeb movieListWeb = new MovieListWeb();
+        movieListWeb.setTitle(movieCreateWeb.getTitle());
+        movieListWeb.setId(id);
+        return new Response(movieListWeb);
+    }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{id}")
+    public void update(@PathVariable Integer id, @RequestBody MovieDetailWeb movieDetailWeb) {
+        movieDetailWeb.setId(id);
+        movieService.update(MovieMapper.mapper.toMovie(movieDetailWeb));
+    }
 }
