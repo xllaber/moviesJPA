@@ -1,9 +1,6 @@
 package com.llacerximo.movies.domain.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
@@ -18,7 +15,7 @@ public class Movie {
     private Integer year;
     private Integer runtime;
     private Director director;
-    private List<Actor> actors;
+    private List<MovieCharacter> characters;
 
     public Movie(Integer id, String title, Integer year, Integer runtime) {
         this.id = id;

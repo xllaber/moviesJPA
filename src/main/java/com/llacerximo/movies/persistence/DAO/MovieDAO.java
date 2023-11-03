@@ -92,10 +92,10 @@ public class MovieDAO {
         DBUtil.close(connection);
     }
 
-    public void delete(Connection connection, MovieEntity movieEntity) {
+    public void delete(Connection connection, Integer id) {
         String sql = "delete from movies where id = ?";
         String sqlActors = "delete form actors_movies where movie_id = ?";
-        List<Object> params = List.of(movieEntity.getId());
+        List<Object> params = List.of(id);
         DBUtil.delete(connection, sql, params);
         DBUtil.delete(connection, sqlActors, params);
         DBUtil.close(connection);

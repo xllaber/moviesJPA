@@ -60,7 +60,16 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Override
     public void update(Movie movie) {
+        Connection connection = DBUtil.open(true);
+        movieDAO.update(connection, MovieMapper.mapper.toMovieEntity(movie));
+        DBUtil.close(connection);
+    }
 
+    @Override
+    public void delete(Integer id) {
+        Connection connection = DBUtil.open(true);
+        movieDAO.delete(connection, id);
+        DBUtil.close(connection);
     }
 
     @Override

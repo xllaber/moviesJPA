@@ -31,13 +31,12 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie findById(Integer id) {
         Movie movie = movieRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado la pelicula con id: " + id));
-//        Director director = directorRepository.getByMovieId(id).orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado el director de la pelicula con id: " + id))
         movie.setDirector(
                 directorRepository.getByMovieId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado el director de la pelicula con id: " + id))
         );
         List<Actor> actors = actorRepository.getByMovieId(id);
-        movie.setActors(actors);
+//        movie.setActors(actors);
         return movie;
     }
 
@@ -64,4 +63,11 @@ public class MovieServiceImpl implements MovieService {
         movieRepository.findById(movie.getId()).orElseThrow(() -> new ResourceNotFoundException("no se ha encontrado la pelicula con id " + movie.getId()));
         movieRepository.update(movie);
     }
+
+    @Override
+    public void delete(Integer id) {
+        movieRepository.findById(id).orElseThrow(()  -> new ResourceNotFoundException("No se ha encontrado la pelicula con id: " + id));
+        movieRepository.delete(id);
+    }
+
 }
