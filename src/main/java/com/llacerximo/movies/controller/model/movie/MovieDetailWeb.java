@@ -1,5 +1,6 @@
 package com.llacerximo.movies.controller.model.movie;
 
+import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterListWeb;
 import com.llacerximo.movies.controller.model.actor.ActorListWeb;
 import com.llacerximo.movies.controller.model.director.DirectorListWeb;
 import lombok.Getter;
@@ -20,6 +21,6 @@ public class MovieDetailWeb {
     private Integer year;
     private Integer runtime;
     private DirectorListWeb director;
-    private List<ActorListWeb> actors;
+    private List<MovieCharacterListWeb> characters;
 
 }

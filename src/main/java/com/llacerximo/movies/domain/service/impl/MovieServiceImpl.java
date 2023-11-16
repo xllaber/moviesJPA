@@ -3,6 +3,7 @@ package com.llacerximo.movies.domain.service.impl;
 import com.llacerximo.movies.domain.entity.Actor;
 import com.llacerximo.movies.domain.entity.Director;
 import com.llacerximo.movies.domain.entity.Movie;
+import com.llacerximo.movies.domain.entity.MovieCharacter;
 import com.llacerximo.movies.domain.repository.ActorRepository;
 import com.llacerximo.movies.domain.repository.DirectorRepository;
 import com.llacerximo.movies.domain.service.MovieService;
@@ -11,7 +12,9 @@ import com.llacerximo.movies.domain.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -22,6 +25,8 @@ public class MovieServiceImpl implements MovieService {
     DirectorRepository directorRepository;
     @Autowired
     ActorRepository actorRepository;
+
+
 
     @Override
     public List<Movie> getAllPaginated(Integer page, Integer pageSize) {
@@ -45,16 +50,21 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Integer insert(Movie movie, Integer directorId, List<Integer> actorIds) {
+    public Integer insert(Movie movie, Integer directorId, Map<Integer, String> characters) {
         Director director = directorRepository.getById(directorId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado el director con id " + directorId));
-        List<Actor> actors = actorIds.stream()
-                .map(actorId -> actorRepository.getById(actorId)
-                        .orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado el actor con id " + actorId))
-                )
-                .toList();
+        List<MovieCharacter> movieCharacters = new ArrayList<>();
+        characters.forEach((actorId, characterName) -> {
+            MovieCharacter movieCharacter = new MovieCharacter();
+            movieCharacter.setCharacter(characterName);
+            movieCharacter.setActor(
+                    actorRepository.getById(actorId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Actor con id " + actorId + " no encontrado"))
+            );
+            movieCharacters.add(movieCharacter);
+        });
         movie.setDirector(director);
-        movie.setActors(actors);
+        movie.setCharacters(movieCharacters);
         return movieRepository.insert(movie);
     }
 

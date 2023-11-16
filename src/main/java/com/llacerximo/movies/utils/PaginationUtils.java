@@ -30,21 +30,6 @@ public class PaginationUtils {
     @JsonProperty("Previous page")
     private String previous;
 
-//    public PaginationUtils(Integer totalRecords, Integer pageSize, Integer page) {
-//        this.totalRecords = totalRecords;
-//        this.page = page;
-//        this.pageSize = pageSize;
-//        int totalPages = (int) (Math.ceil((double) totalRecords / pageSize));
-//        this.totalPages = totalPages;
-//
-//        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())). getRequest();
-//        String url = request.getRequestURL().toString();
-//        if (page > 1 && totalPages > 1)
-//            this.previous = url +  "?page=" + (page - 1);
-//        if (page < totalPages)
-//            this.next = url +  "?page=" + (page + 1);
-//    }
-
     public void setNextAndPrevious(Integer totalRecords, Integer page) {
         int totalPages = (int) (Math.ceil((double) totalRecords / pageSize));
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())). getRequest();

@@ -53,7 +53,7 @@ public class MovieController {
         Integer id = movieService.insert(
                 MovieMapper.mapper.toMovie(movieCreateWeb),
                 movieCreateWeb.getDirectorId(),
-                movieCreateWeb.getActorIds()
+                movieCreateWeb.getCharacters()
         );
         MovieListWeb movieListWeb = new MovieListWeb();
         movieListWeb.setTitle(movieCreateWeb.getTitle());

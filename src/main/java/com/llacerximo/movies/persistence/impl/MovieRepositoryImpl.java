@@ -5,6 +5,7 @@ import com.llacerximo.movies.domain.entity.Movie;
 import com.llacerximo.movies.exceptions.DBConnectionException;
 import com.llacerximo.movies.exceptions.SQLStatmentException;
 import com.llacerximo.movies.domain.repository.MovieRepository;
+import com.llacerximo.movies.mapper.DirectorMapper;
 import com.llacerximo.movies.mapper.MovieMapper;
 import com.llacerximo.movies.persistence.DAO.MovieDAO;
 import com.llacerximo.movies.persistence.model.MovieEntity;
@@ -51,6 +52,7 @@ public class MovieRepositoryImpl implements MovieRepository {
     public Integer insert(Movie movie) {
         try(Connection connection = DBUtil.open(false)) {
             MovieEntity movieEntity =  MovieMapper.mapper.toMovieEntity(movie);
+            movieEntity.setDirectorEntity(DirectorMapper.mapper.toDirectorEntity(movie.getDirector()));
             Integer id = movieDAO.insert(connection, movieEntity);
             return id;
         } catch (SQLException e) {

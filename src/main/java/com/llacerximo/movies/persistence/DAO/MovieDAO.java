@@ -4,7 +4,10 @@ import com.llacerximo.movies.db.DBUtil;
 import com.llacerximo.movies.exceptions.DBConnectionException;
 import com.llacerximo.movies.exceptions.SQLStatmentException;
 import com.llacerximo.movies.mapper.MovieMapper;
+import com.llacerximo.movies.persistence.model.ActorEntity;
+import com.llacerximo.movies.persistence.model.MovieCharacterEntity;
 import com.llacerximo.movies.persistence.model.MovieEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -16,6 +19,9 @@ import java.util.Optional;
 
 @Component
 public class MovieDAO {
+
+    @Autowired
+    ActorDAO actorDAO;
 
     public List<MovieEntity> getAllPaginated(Connection connection, Integer page, Integer pageSize) {
         String sql = "SELECT * FROM movies";
@@ -64,10 +70,10 @@ public class MovieDAO {
             params.add(movieEntity.getTitle());
             params.add(movieEntity.getYear());
             params.add(movieEntity.getRuntime());
-            params.add(movieEntity.getDirectorId());
+            params.add(movieEntity.getDirectorEntity().getId());
             Integer id =  DBUtil.insert(connection, SQL, params);
-            movieEntity.getActorIds().stream()
-                    .forEach(actorId -> addActor(connection, id, actorId));
+            movieEntity.getMovieCharacterEntities().stream()
+                    .forEach(movieCharacterEntity -> addCharacter(connection, id, movieCharacterEntity));
             connection.commit();
             return id;
         } catch (Exception e){
@@ -76,10 +82,21 @@ public class MovieDAO {
         }
     }
 
-    public void addActor(Connection connection, Integer movieId, Integer actorId){
-        final String SQL = "insert into actors_movies (actor_id, movie_id) values (?, ?)";
-        DBUtil.insert(connection, SQL, List.of(actorId, movieId));
+    public void addCharacter(Connection connection, Integer movieId, MovieCharacterEntity movieCharacterEntity) {
+        final String SQL = "insert into actors_movies (actor_id, movie_id, characters) values (?, ?, ?)";
+        ActorEntity actorEntity = movieCharacterEntity.getActorEntity(connection, actorDAO);
+        List<Object> params = new ArrayList<>();
+        params.add(actorEntity.getId());
+        params.add(movieId);
+        params.add(movieCharacterEntity.getCharacter());
+        DBUtil.insert(connection, SQL, params);
     }
+
+
+//    public void addActor(Connection connection, Integer movieId, Integer actorId){
+//        final String SQL = "insert into actors_movies (actor_id, movie_id) values (?, ?)";
+//        DBUtil.insert(connection, SQL, List.of(actorId, movieId));
+//    }
 
     public void update(Connection connection, MovieEntity movieEntity) {
         String sql = "update movies set title = ?, year = ?, runtime = ?, director_id = ?";
@@ -87,7 +104,7 @@ public class MovieDAO {
         params.add(movieEntity.getTitle());
         params.add(movieEntity.getYear());
         params.add(movieEntity.getRuntime());
-        params.add(movieEntity.getDirectorId());
+        params.add(movieEntity.getDirectorEntity().getId());
         DBUtil.update(connection, sql, params);
         DBUtil.close(connection);
     }

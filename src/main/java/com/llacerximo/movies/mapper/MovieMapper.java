@@ -28,7 +28,7 @@ public interface MovieMapper {
     @Mapping(target = "runtime", expression = "java(resultSet.getInt(\"runtime\"))")
     MovieEntity toMovieEntity(ResultSet resultSet) throws SQLException;
     @Mapping(target = "directorId", expression = "java(movie.getDirector().getId())")
-    @Mapping(target = "actorIds", expression = "java(mapActorsToActorIds(movie.getActors()))")
+//    @Mapping(target = "actorIds", expression = "java(mapActorsToActorIds(movie.getActors()))")
     MovieEntity toMovieEntity(Movie movie);
     @Named("actorToActorIds")
     default List<Integer> mapActorsToActorIds(List<Actor> actors){

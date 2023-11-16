@@ -17,8 +17,8 @@ public class MovieEntity {
     private String title;
     private Integer year;
     private Integer runtime;
-    private Integer directorId;
-    private List<Integer> actorIds;
+    private DirectorEntity directorEntity;
+    private List<MovieCharacterEntity> movieCharacterEntities;
 
     public MovieEntity(int id, String title, int year, int runtime) {
         this.id = id;

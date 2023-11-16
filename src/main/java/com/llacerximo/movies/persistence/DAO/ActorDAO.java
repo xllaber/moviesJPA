@@ -1,9 +1,11 @@
 package com.llacerximo.movies.persistence.DAO;
 
 import com.llacerximo.movies.db.DBUtil;
+import com.llacerximo.movies.domain.entity.Actor;
 import com.llacerximo.movies.exceptions.DBConnectionException;
 import com.llacerximo.movies.exceptions.SQLStatmentException;
 import com.llacerximo.movies.mapper.ActorMapper;
+import com.llacerximo.movies.mapper.MovieCharacterMapper;
 import com.llacerximo.movies.persistence.model.ActorEntity;
 import org.springframework.stereotype.Component;
 
@@ -88,6 +90,16 @@ public class ActorDAO {
             }
             DBUtil.close(connection);
             return actorEntities;
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+    }
+
+    public Optional<ActorEntity> getByCharacterId(Connection connection, Integer characterId) {
+        String sql = "select a.* from actors a inner join actors_movies am on a.id = am.actor_id and am.id = ?";
+        try {
+            ResultSet resultSet = DBUtil.select(connection, sql, List.of(characterId));
+            return resultSet.next() ? Optional.of(ActorMapper.mapper.toActorEntity(resultSet)) : Optional.empty();
         } catch (SQLException e) {
             throw new RuntimeException();
         }

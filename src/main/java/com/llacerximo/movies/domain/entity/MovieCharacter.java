@@ -6,8 +6,7 @@ import lombok.*;
 public class MovieCharacter {
 
     private Integer id;
-    private String name;
-//    private Movie movie;
+    private String character;
     private Actor actor;
 
 }

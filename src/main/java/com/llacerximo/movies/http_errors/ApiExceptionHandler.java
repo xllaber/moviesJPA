@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
             ResourceNotFoundException.class
@@ -37,4 +38,5 @@ public class ApiExceptionHandler {
         exception.printStackTrace();
         return new ErrorMessage("Internal error", HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
+
 }

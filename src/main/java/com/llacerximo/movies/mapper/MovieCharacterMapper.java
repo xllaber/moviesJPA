@@ -17,7 +17,7 @@ public interface MovieCharacterMapper {
     MovieCharacterEntity toMovieCharacterEntity(MovieCharacter movieCharacter);
 
     @Mapping(target = "id", expression = "java(resultSet.getInt(\"id\"))")
-    @Mapping(target = "name", expression = "java(resultSet.getString(\"name\"))")
+    @Mapping(target = "character", expression = "java(resultSet.getString(\"character\"))")
 //    @Mapping(target = "movieId", expression = "java(resultSet.getInt(\"movie_id\"))")
     @Mapping(target = "actorId", expression = "java(resultSet.getInt(\"actor_id\"))")
     MovieCharacterEntity toMovieCharacterEntity(ResultSet resultSet);
