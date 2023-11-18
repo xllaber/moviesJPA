@@ -1,6 +1,8 @@
 package com.llacerximo.movies.domain.service;
 
+import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterUpdateWeb;
 import com.llacerximo.movies.domain.entity.Movie;
+import com.llacerximo.movies.domain.entity.MovieCharacter;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,7 @@ public interface MovieService {
     Movie findById(Integer id);
     Integer getTotalRecords();
     Integer insert(Movie movie, Integer directorId, Map<Integer, String> actorIds);
-    void update(Movie movie);
+    void update(Movie movie, Integer directorId, List<Integer> characterIds);
     void delete(Integer id);
+
 }

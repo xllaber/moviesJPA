@@ -1,11 +1,13 @@
 package com.llacerximo.movies.domain.service.impl;
 
+import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterUpdateWeb;
 import com.llacerximo.movies.domain.entity.Actor;
 import com.llacerximo.movies.domain.entity.Director;
 import com.llacerximo.movies.domain.entity.Movie;
 import com.llacerximo.movies.domain.entity.MovieCharacter;
 import com.llacerximo.movies.domain.repository.ActorRepository;
 import com.llacerximo.movies.domain.repository.DirectorRepository;
+import com.llacerximo.movies.domain.repository.MovieCharacterRepository;
 import com.llacerximo.movies.domain.service.MovieService;
 import com.llacerximo.movies.exceptions.ResourceNotFoundException;
 import com.llacerximo.movies.domain.repository.MovieRepository;
@@ -25,7 +27,8 @@ public class MovieServiceImpl implements MovieService {
     DirectorRepository directorRepository;
     @Autowired
     ActorRepository actorRepository;
-
+    @Autowired
+    MovieCharacterRepository movieCharacterRepository;
 
 
     @Override
@@ -64,8 +67,24 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void update(Movie movie) {
-        movieRepository.findById(movie.getId()).orElseThrow(() -> new ResourceNotFoundException("no se ha encontrado la pelicula con id " + movie.getId()));
+    public void update(Movie movie, Integer directorId, List<Integer> characterIds) {
+        movieRepository.findById(movie.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("no se ha encontrado la pelicula con id " + movie.getId()));
+        Director director = directorRepository.getById(directorId)
+                .orElseThrow(() -> new ResourceNotFoundException("no se ha encontrado el director con id " + directorId));
+        List<MovieCharacter> movieCharacters = characterIds.stream()
+                        .map(characterId -> {
+                                    MovieCharacter movieCharacter = movieCharacterRepository.getById(characterId)
+                                            .orElseThrow(() -> new ResourceNotFoundException("no se ha encontrado el personaje con id " + characterId));
+                                    movieCharacter.setActor(actorRepository.getByCharacterId(movieCharacter.getId())
+                                            .orElseThrow(() -> new ResourceNotFoundException("no se ha encontrado el actor del personaje con id " + characterId))
+                                    );
+                                    return movieCharacter;
+                                }
+                        )
+                        .toList();
+        movie.setDirector(director);
+        movie.setCharacters(movieCharacters);
         movieRepository.update(movie);
     }
 

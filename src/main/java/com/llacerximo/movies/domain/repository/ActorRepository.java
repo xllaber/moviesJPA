@@ -18,5 +18,5 @@ public interface ActorRepository {
 
     void delete(Integer id);
 
-    List<Actor> getByMovieId(Integer movieId);
+    Optional<Actor> getByCharacterId(Integer characterId);
 }

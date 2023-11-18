@@ -1,11 +1,14 @@
 package com.llacerximo.movies.mapper;
 
 import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterListWeb;
+import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterUpdateWeb;
+import com.llacerximo.movies.domain.entity.Actor;
 import com.llacerximo.movies.domain.entity.MovieCharacter;
 import com.llacerximo.movies.persistence.model.MovieCharacterEntity;
 import com.llacerximo.movies.persistence.model.MovieEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 import java.sql.ResultSet;
@@ -22,7 +25,6 @@ public interface MovieCharacterMapper {
     MovieCharacterListWeb toMovieCharacterListWeb(MovieCharacter movieCharacter);
     @Mapping(target = "actor", expression = "java(ActorMapper.mapper.toActor(movieCharacterEntity.getActorEntity()))")
     MovieCharacter toMovieCharacter(MovieCharacterEntity movieCharacterEntity);
-
     @Mapping(target = "actorEntity", expression = "java(ActorMapper.mapper.toActorEntity(movieCharacter.getActor()))")
     MovieCharacterEntity toMovieCharacterEntity(MovieCharacter movieCharacter);
 
@@ -55,4 +57,9 @@ public interface MovieCharacterMapper {
                 .toList();
         return movieCharacterEntities;
     }
+
+//    @Named("actorIdToActor")
+//    default Actor mapActorIdToActor(Integer actorId) {
+//
+//    }
 }

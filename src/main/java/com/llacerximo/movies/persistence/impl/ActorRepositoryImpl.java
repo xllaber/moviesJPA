@@ -97,11 +97,18 @@ public class ActorRepositoryImpl implements ActorRepository {
     }
 
     @Override
-    public List<Actor> getByMovieId(Integer movieId) {
+    public Optional<Actor> getByCharacterId(Integer characterId) {
         Connection connection = DBUtil.open(true);
-        List<ActorEntity> actorEntities = actorDAO.findByMovieId(connection, movieId);
-        return actorEntities.stream()
-                .map(actorEntity -> ActorMapper.mapper.toActor(actorEntity))
-                .toList();
+        Actor actor = ActorMapper.mapper.toActor(actorDAO.getByCharacterId(connection, characterId).orElse(null));
+        return Optional.of(actor);
     }
+
+//    @Override
+//    public List<Actor> getByMovieId(Integer movieId) {
+//        Connection connection = DBUtil.open(true);
+//        List<ActorEntity> actorEntities = actorDAO.findByMovieId(connection, movieId);
+//        return actorEntities.stream()
+//                .map(actorEntity -> ActorMapper.mapper.toActor(actorEntity))
+//                .toList();
+//    }
 }

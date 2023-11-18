@@ -1,6 +1,7 @@
 package com.llacerximo.movies.domain.repository;
 
 import com.llacerximo.movies.domain.entity.Movie;
+import com.llacerximo.movies.domain.entity.MovieCharacter;
 
 import java.util.List;
 import java.util.Optional;

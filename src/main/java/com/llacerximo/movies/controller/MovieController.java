@@ -1,12 +1,16 @@
 package com.llacerximo.movies.controller;
 
+import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterUpdateWeb;
 import com.llacerximo.movies.controller.model.actor.ActorCreateWeb;
 import com.llacerximo.movies.controller.model.movie.MovieCreateWeb;
 import com.llacerximo.movies.controller.model.movie.MovieDetailWeb;
 import com.llacerximo.movies.controller.model.movie.MovieListWeb;
+import com.llacerximo.movies.controller.model.movie.MovieUpdateWeb;
 import com.llacerximo.movies.domain.entity.Movie;
+import com.llacerximo.movies.domain.entity.MovieCharacter;
 import com.llacerximo.movies.domain.service.MovieService;
 import com.llacerximo.movies.http_response.Response;
+import com.llacerximo.movies.mapper.MovieCharacterMapper;
 import com.llacerximo.movies.mapper.MovieMapper;
 import com.llacerximo.movies.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +28,8 @@ public class MovieController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
-    public Response getAll(@RequestParam(required = false, defaultValue = "1") Integer page, @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+    public Response getAll(@RequestParam(required = false, defaultValue = "1") Integer page,
+                           @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         List<Movie> movies = movieService.getAllPaginated(page, pageSize);
         List<MovieListWeb> movieWeb = movies.stream()
                 .map(MovieMapper.mapper::toMovieListWeb)
@@ -62,8 +67,14 @@ public class MovieController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    public void update(@PathVariable Integer id, @RequestBody MovieDetailWeb movieDetailWeb) {
-        movieDetailWeb.setId(id);
-        movieService.update(MovieMapper.mapper.toMovie(movieDetailWeb));
+    public void update(@PathVariable Integer id, @RequestBody MovieUpdateWeb movieUpdateWeb) {
+        movieUpdateWeb.setId(id);
+        movieService.update(MovieMapper.mapper.toMovie(movieUpdateWeb), movieUpdateWeb.getDirectorId(), movieUpdateWeb.getCharacterIds());
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id) {
+        movieService.delete(id);
     }
 }

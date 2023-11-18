@@ -91,29 +91,56 @@ public class MovieDAO {
         DBUtil.insert(connection, SQL, params);
     }
 
-
-//    public void addActor(Connection connection, Integer movieId, Integer actorId){
-//        final String SQL = "insert into actors_movies (actor_id, movie_id) values (?, ?)";
-//        DBUtil.insert(connection, SQL, List.of(actorId, movieId));
-//    }
-
     public void update(Connection connection, MovieEntity movieEntity) {
-        String sql = "update movies set title = ?, year = ?, runtime = ?, director_id = ?";
-        List<Object> params = new ArrayList<>();
-        params.add(movieEntity.getTitle());
-        params.add(movieEntity.getYear());
-        params.add(movieEntity.getRuntime());
-        params.add(movieEntity.getDirectorEntity().getId());
-        DBUtil.update(connection, sql, params);
+        try {
+            String sql = "update movies set title = ?, year = ?, runtime = ?, director_id = ? where id = ?";
+            List<Object> params = new ArrayList<>();
+            params.add(movieEntity.getTitle());
+            params.add(movieEntity.getYear());
+            params.add(movieEntity.getRuntime());
+            params.add(movieEntity.getDirectorEntity().getId());
+            params.add(movieEntity.getId());
+            movieEntity.getMovieCharacterEntities().forEach(movieCharacterEntity -> updateCharacter(connection, movieEntity.getId(), movieCharacterEntity));
+            DBUtil.update(connection, sql, params);
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         DBUtil.close(connection);
+    }
+
+    public void updateCharacter(Connection connection, Integer movieId, MovieCharacterEntity movieCharacterEntity) {
+        try {
+            String sql = "update actors_movies set actor_id = ?, characters = ? where movie_id = ? and id = ?";
+            List<Object> params = new ArrayList<>();
+            params.add(movieCharacterEntity.getActorEntity().getId());
+            params.add(movieCharacterEntity.getCharacter());
+            params.add(movieId);
+            params.add(movieCharacterEntity.getId());
+            DBUtil.update(connection, sql, params);
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void delete(Connection connection, Integer id) {
-        String sql = "delete from movies where id = ?";
-        String sqlActors = "delete form actors_movies where movie_id = ?";
-        List<Object> params = List.of(id);
-        DBUtil.delete(connection, sql, params);
-        DBUtil.delete(connection, sqlActors, params);
+        try {
+            String sql = "delete from movies where id = ?";
+            List<Object> params = List.of(id);
+            DBUtil.delete(connection, sql, params);
+            deleteCharacters(connection, id);
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         DBUtil.close(connection);
     }
+
+    public void deleteCharacters(Connection connection, Integer id) {
+        String sql = "delete from actors_movies where movie_id = ?";
+        List<Object> params = List.of(id);
+        DBUtil.delete(connection, sql, params);
+    }
+
 }

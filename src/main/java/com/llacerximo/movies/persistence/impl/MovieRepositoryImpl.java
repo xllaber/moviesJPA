@@ -2,6 +2,7 @@ package com.llacerximo.movies.persistence.impl;
 
 import com.llacerximo.movies.db.DBUtil;
 import com.llacerximo.movies.domain.entity.Movie;
+import com.llacerximo.movies.domain.entity.MovieCharacter;
 import com.llacerximo.movies.exceptions.DBConnectionException;
 import com.llacerximo.movies.exceptions.SQLStatmentException;
 import com.llacerximo.movies.domain.repository.MovieRepository;
@@ -79,14 +80,17 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Override
     public void update(Movie movie) {
-        Connection connection = DBUtil.open(true);
-        movieDAO.update(connection, MovieMapper.mapper.toMovieEntity(movie));
+        Connection connection = DBUtil.open(false);
+        MovieEntity movieEntity = MovieMapper.mapper.toMovieEntity(movie);
+        movieEntity.setDirectorEntity(DirectorMapper.mapper.toDirectorEntity(movie.getDirector()));
+        movieEntity.setMovieCharacterEntities(MovieCharacterMapper.mapper.toMovieCharacterEntityList(movie.getCharacters()));
+        movieDAO.update(connection, movieEntity);
         DBUtil.close(connection);
     }
 
     @Override
     public void delete(Integer id) {
-        Connection connection = DBUtil.open(true);
+        Connection connection = DBUtil.open(false);
         movieDAO.delete(connection, id);
         DBUtil.close(connection);
     }
