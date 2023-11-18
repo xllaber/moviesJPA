@@ -77,7 +77,7 @@ public class MovieDAO {
             return id;
         } catch (Exception e){
             connection.rollback();
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getCause() + e.getMessage());
         }
     }
 

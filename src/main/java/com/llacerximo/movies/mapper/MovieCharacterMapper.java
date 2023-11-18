@@ -22,6 +22,8 @@ public interface MovieCharacterMapper {
     MovieCharacterListWeb toMovieCharacterListWeb(MovieCharacter movieCharacter);
     @Mapping(target = "actor", expression = "java(ActorMapper.mapper.toActor(movieCharacterEntity.getActorEntity()))")
     MovieCharacter toMovieCharacter(MovieCharacterEntity movieCharacterEntity);
+
+    @Mapping(target = "actorEntity", expression = "java(ActorMapper.mapper.toActorEntity(movieCharacter.getActor()))")
     MovieCharacterEntity toMovieCharacterEntity(MovieCharacter movieCharacter);
 
     @Mapping(target = "id", expression = "java(resultSet.getInt(\"id\"))")
