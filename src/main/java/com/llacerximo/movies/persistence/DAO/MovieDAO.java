@@ -72,8 +72,7 @@ public class MovieDAO {
             params.add(movieEntity.getRuntime());
             params.add(movieEntity.getDirectorEntity().getId());
             Integer id =  DBUtil.insert(connection, SQL, params);
-            movieEntity.getMovieCharacterEntities().stream()
-                    .forEach(movieCharacterEntity -> addCharacter(connection, id, movieCharacterEntity));
+            movieEntity.getMovieCharacterEntities().forEach(movieCharacterEntity -> addCharacter(connection, id, movieCharacterEntity));
             connection.commit();
             return id;
         } catch (Exception e){

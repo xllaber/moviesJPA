@@ -30,18 +30,13 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> getAllPaginated(Integer page, Integer pageSize) {
-        return movieRepository.getAllPaginated(page, pageSize);
+        List<Movie> movies = movieRepository.getAllPaginated(page, pageSize);
+        return movies;
     }
 
     @Override
     public Movie findById(Integer id) {
         Movie movie = movieRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado la pelicula con id: " + id));
-        movie.setDirector(
-                directorRepository.getByMovieId(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado el director de la pelicula con id: " + id))
-        );
-        List<Actor> actors = actorRepository.getByMovieId(id);
-//        movie.setActors(actors);
         return movie;
     }
 

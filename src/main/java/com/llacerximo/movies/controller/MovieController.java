@@ -34,7 +34,6 @@ public class MovieController {
                 .pageSize(pageSize)
                 .totalRecords(movieService.getTotalRecords())
                 .build();
-        System.out.println(pagination.getTotalRecords());
         pagination.setNextAndPrevious(pagination.getTotalRecords(), page);
         return new Response(movieWeb, pagination);
 

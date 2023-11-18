@@ -6,8 +6,13 @@ import com.llacerximo.movies.exceptions.DBConnectionException;
 import com.llacerximo.movies.exceptions.SQLStatmentException;
 import com.llacerximo.movies.domain.repository.MovieRepository;
 import com.llacerximo.movies.mapper.DirectorMapper;
+import com.llacerximo.movies.mapper.MovieCharacterMapper;
 import com.llacerximo.movies.mapper.MovieMapper;
+import com.llacerximo.movies.persistence.DAO.ActorDAO;
+import com.llacerximo.movies.persistence.DAO.DirectorDAO;
+import com.llacerximo.movies.persistence.DAO.MovieCharacterDAO;
 import com.llacerximo.movies.persistence.DAO.MovieDAO;
+import com.llacerximo.movies.persistence.model.MovieCharacterEntity;
 import com.llacerximo.movies.persistence.model.MovieEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,14 +27,21 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Autowired
     MovieDAO movieDAO;
+    @Autowired
+    DirectorDAO directorDAO;
+    @Autowired
+    MovieCharacterDAO movieCharacterDAO;
+    @Autowired
+    ActorDAO actorDAO;
 
     @Override
     public List<Movie> getAllPaginated(Integer page, Integer pageSize) {
         try(Connection connection = DBUtil.open(true)) {
             List<MovieEntity> movieEntities = movieDAO.getAllPaginated(connection, page, pageSize);
-            return movieEntities.stream()
-                    .map(movieEntity -> MovieMapper.mapper.toMovie(movieEntity))
+            List<Movie> movies = movieEntities.stream()
+                    .map(MovieMapper.mapper::toMovie)
                     .toList();
+            return movies;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -38,11 +50,15 @@ public class MovieRepositoryImpl implements MovieRepository {
     @Override
     public Optional<Movie> findById(Integer id) {
         try (Connection connection = DBUtil.open(true)){
-            Optional<MovieEntity> movieEntity = movieDAO.findById(connection, id);
-            if(movieEntity.isEmpty()) {
-                return Optional.empty();
+            MovieEntity movieEntity = movieDAO.findById(connection, id).get();
+            if(movieEntity != null) {
+                movieEntity.getDirectorEntity(connection, directorDAO);
+                movieEntity.getMovieCharacterEntity(connection, movieCharacterDAO).forEach(
+                        movieCharacterEntity -> movieCharacterEntity.getActorEntity(connection, actorDAO)
+                );
             }
-            return Optional.of(MovieMapper.mapper.toMovie(movieEntity.get()));
+            Movie movie = MovieMapper.mapper.toMovie(movieEntity);
+            return Optional.of(movie);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -53,6 +69,7 @@ public class MovieRepositoryImpl implements MovieRepository {
         try(Connection connection = DBUtil.open(false)) {
             MovieEntity movieEntity =  MovieMapper.mapper.toMovieEntity(movie);
             movieEntity.setDirectorEntity(DirectorMapper.mapper.toDirectorEntity(movie.getDirector()));
+            movieEntity.setMovieCharacterEntities(MovieCharacterMapper.mapper.toMovieCharacterEntityList(movie.getCharacters()));
             Integer id = movieDAO.insert(connection, movieEntity);
             return id;
         } catch (SQLException e) {
