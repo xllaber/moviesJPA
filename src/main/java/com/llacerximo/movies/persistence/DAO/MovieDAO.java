@@ -143,4 +143,33 @@ public class MovieDAO {
         DBUtil.delete(connection, sql, params);
     }
 
+    public void addCharacterToMovie(Connection connection, Integer movieId, MovieCharacterEntity movieCharacterEntity) {
+        String sql = "insert into actors_movies (actor_id, movie_id, characters) values (?, ?, ?)";
+        List<Object> params = new ArrayList<>();
+        params.add(movieCharacterEntity.getActorEntity().getId());
+        params.add(movieId);
+        params.add(movieCharacterEntity.getCharacter());
+        DBUtil.insert(connection, sql, params);
+        DBUtil.close(connection);
+    }
+
+    public void updateCharacterOfMovie(Connection connection, MovieCharacterEntity movieCharacterEntity, Integer movieId) {
+        String sql = "update actors_movies set actor_id = ?, characters = ? where movie_id = ? and id = ?";
+        List<Object> params = new ArrayList<>();
+        params.add(movieCharacterEntity.getActorEntity().getId());
+        params.add(movieCharacterEntity.getCharacter());
+        params.add(movieId);
+        params.add(movieCharacterEntity.getId());
+        DBUtil.update(connection, sql, params);
+        DBUtil.close(connection);
+    }
+
+    public void deleteCharacterOfMovie(Connection connection, Integer characterId, Integer movieId) {
+        String sql = "delete from actors_movies where movie_id = ? and id = ?";
+        List<Object> params = new ArrayList<>();
+        params.add(movieId);
+        params.add(characterId);
+        DBUtil.delete(connection, sql, params);
+        DBUtil.close(connection);
+    }
 }

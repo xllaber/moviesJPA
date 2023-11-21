@@ -96,6 +96,26 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
     @Override
+    public void addCharacterToMovie(Integer movieId, MovieCharacter movieCharacter) {
+        Connection connection = DBUtil.open(true);
+        MovieCharacterEntity movieCharacterEntity = MovieCharacterMapper.mapper.toMovieCharacterEntity(movieCharacter);
+        movieDAO.addCharacterToMovie(connection, movieId, movieCharacterEntity);
+    }
+
+    @Override
+    public void updateCharacterOfMovie(MovieCharacter movieCharacter, Integer movieId) {
+        Connection connection = DBUtil.open(true);
+        MovieCharacterEntity movieCharacterEntity = MovieCharacterMapper.mapper.toMovieCharacterEntity(movieCharacter);
+        movieDAO.updateCharacterOfMovie(connection, movieCharacterEntity, movieId);
+    }
+
+    @Override
+    public void deleteCharacterOfMovie(Integer characterId, Integer movieId) {
+        Connection connection = DBUtil.open(true);
+        movieDAO.deleteCharacterOfMovie(connection, characterId, movieId);
+    }
+
+    @Override
     public Integer getTotalRecords() {
         try(Connection connection = DBUtil.open(true)) {
             return movieDAO.getTotalRecords(connection);

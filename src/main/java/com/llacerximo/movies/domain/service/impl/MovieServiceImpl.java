@@ -11,6 +11,7 @@ import com.llacerximo.movies.domain.repository.MovieCharacterRepository;
 import com.llacerximo.movies.domain.service.MovieService;
 import com.llacerximo.movies.exceptions.ResourceNotFoundException;
 import com.llacerximo.movies.domain.repository.MovieRepository;
+import com.llacerximo.movies.persistence.DAO.MovieDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -92,6 +93,35 @@ public class MovieServiceImpl implements MovieService {
     public void delete(Integer id) {
         movieRepository.findById(id).orElseThrow(()  -> new ResourceNotFoundException("No se ha encontrado la pelicula con id: " + id));
         movieRepository.delete(id);
+    }
+
+    @Override
+    public void addCharacterToMovie(Integer actorId, Integer movieId, MovieCharacter movieCharacter) {
+        movieCharacter.setActor(
+                actorRepository.getById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor con id " + actorId + " no encontrado"))
+        );
+        movieRepository.addCharacterToMovie(movieId, movieCharacter);
+    }
+
+    @Override
+    public void updateCharacterOfMovie(MovieCharacter movieCharacter, Integer characterId, Integer actorId, Integer movieId) {
+        movieCharacterRepository.getById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Personaje con id " + movieCharacter.getId() + " no encontrado"));
+        movieCharacter.setId(characterId);
+        movieCharacter.setActor(
+                actorRepository.getById(actorId).orElseThrow(() -> new ResourceNotFoundException("Actor con id " + actorId + " no encontrado"))
+        );
+        movieRepository.updateCharacterOfMovie(movieCharacter, movieId);
+    }
+
+    @Override
+    public void deleteCharacterOfMovie(Integer characterId, Integer movieId) {
+        movieCharacterRepository.getById(characterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Personaje con id " + characterId + " no encontrado"));
+        movieRepository.findById(movieId)
+                .orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado la pelicula con id: " + movieId));
+
+        movieRepository.deleteCharacterOfMovie(characterId, movieId);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.llacerximo.movies.mapper;
 
+import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterCreateWeb;
 import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterListWeb;
 import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterUpdateWeb;
 import com.llacerximo.movies.domain.entity.Actor;
@@ -25,6 +26,8 @@ public interface MovieCharacterMapper {
     MovieCharacterListWeb toMovieCharacterListWeb(MovieCharacter movieCharacter);
     @Mapping(target = "actor", expression = "java(ActorMapper.mapper.toActor(movieCharacterEntity.getActorEntity()))")
     MovieCharacter toMovieCharacter(MovieCharacterEntity movieCharacterEntity);
+    MovieCharacter toMovieCharacter(MovieCharacterCreateWeb movieCharacterCreateWeb);
+    MovieCharacter toMovieCharacter(MovieCharacterUpdateWeb movieCharacterUpdateWeb);
     @Mapping(target = "actorEntity", expression = "java(ActorMapper.mapper.toActorEntity(movieCharacter.getActor()))")
     MovieCharacterEntity toMovieCharacterEntity(MovieCharacter movieCharacter);
 

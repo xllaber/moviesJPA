@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class MovieCharacterCreateWeb {
 
-    private Integer id;
+    private Integer actorId;
     private String character;
 
 }

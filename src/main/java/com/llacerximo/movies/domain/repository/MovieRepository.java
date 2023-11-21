@@ -13,4 +13,7 @@ public interface MovieRepository {
     Integer insert(Movie movie);
     void update(Movie movie);
     void delete(Integer id);
+    void addCharacterToMovie(Integer movieId, MovieCharacter movieCharacter);
+    void updateCharacterOfMovie(MovieCharacter movieCharacter, Integer movieId);
+    void deleteCharacterOfMovie(Integer characterId, Integer movieId);
 }

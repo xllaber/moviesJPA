@@ -1,5 +1,6 @@
 package com.llacerximo.movies.controller;
 
+import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterCreateWeb;
 import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterUpdateWeb;
 import com.llacerximo.movies.controller.model.actor.ActorCreateWeb;
 import com.llacerximo.movies.controller.model.movie.MovieCreateWeb;
@@ -77,4 +78,33 @@ public class MovieController {
     public void delete(@PathVariable Integer id) {
         movieService.delete(id);
     }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/{movieId}/characters")
+    public Response addCharacterToMovie(@PathVariable("movieId") Integer movieId, @RequestBody MovieCharacterCreateWeb movieCharacterCreateWeb) {
+        movieService.addCharacterToMovie(movieCharacterCreateWeb.getActorId(),
+                movieId,
+                MovieCharacterMapper.mapper.toMovieCharacter(movieCharacterCreateWeb)
+        );
+        return new Response(MovieMapper.mapper.toMovieDetailWeb(movieService.findById(movieId)));
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{movieId}/characters/{characterId}")
+    public Response updateCharacterOfMovie(@PathVariable("movieId") Integer movieId, @PathVariable("characterId") Integer characterId, @RequestBody MovieCharacterUpdateWeb movieCharacterUpdateWeb) {
+        movieService.updateCharacterOfMovie(
+                MovieCharacterMapper.mapper.toMovieCharacter(movieCharacterUpdateWeb),
+                characterId,
+                movieCharacterUpdateWeb.getActorId(),
+                movieId
+        );
+        return new Response(MovieMapper.mapper.toMovieDetailWeb(movieService.findById(movieId)));
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/{movieId}/characters/{characterId}")
+    public void deleteCharacter(@PathVariable("movieId") Integer movieId, @PathVariable("characterId") Integer characterId) {
+        movieService.deleteCharacterOfMovie(characterId, movieId);
+    }
+    
 }
