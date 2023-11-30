@@ -1,4 +1,4 @@
-package com.llacerximo.movies.persistence;
+package com.llacerximo.movies.domain.repository;
 
 import com.llacerximo.movies.domain.entity.Director;
 
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DirectorRepository {
-    List<Director> getAll();
+//    List<Director> getAll();
     List<Director> getAllPaginated(Integer page, Integer pageSize);
 
     Optional<Director> getById(Integer id);
@@ -18,4 +18,6 @@ public interface DirectorRepository {
     void delete(Integer id);
 
     Integer getTotalRecords();
+
+    Optional<Director> getByMovieId(Integer movieId);
 }

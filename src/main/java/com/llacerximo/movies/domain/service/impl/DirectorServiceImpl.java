@@ -3,7 +3,7 @@ package com.llacerximo.movies.domain.service.impl;
 import com.llacerximo.movies.domain.entity.Director;
 import com.llacerximo.movies.domain.service.DirectorService;
 import com.llacerximo.movies.exceptions.ResourceNotFoundException;
-import com.llacerximo.movies.persistence.DirectorRepository;
+import com.llacerximo.movies.domain.repository.DirectorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +21,8 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public List<Director> getAll() {
-        return directorRepository.getAll();
+    public Director getById(Integer id) {
+        return directorRepository.getById(id).orElseThrow(() -> new ResourceNotFoundException("Director con id " + id + " mo encontrado"));
     }
 
     @Override

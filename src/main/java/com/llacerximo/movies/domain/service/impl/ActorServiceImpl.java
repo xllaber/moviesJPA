@@ -1,9 +1,10 @@
 package com.llacerximo.movies.domain.service.impl;
 
 import com.llacerximo.movies.domain.entity.Actor;
+import com.llacerximo.movies.domain.entity.Director;
 import com.llacerximo.movies.domain.service.ActorService;
 import com.llacerximo.movies.exceptions.ResourceNotFoundException;
-import com.llacerximo.movies.persistence.ActorRepository;
+import com.llacerximo.movies.domain.repository.ActorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,13 @@ public class ActorServiceImpl implements ActorService {
     ActorRepository actorRepository;
 
     @Override
-    public List<Actor> getAll() {
-        return actorRepository.getAll();
+    public List<Actor> getAllPaginated(Integer page, Integer pageSizeInput) {
+        return actorRepository.getAllPaginated(page, pageSizeInput);
     }
 
     @Override
-    public List<Actor> getAllPaginated(Integer page, Integer pageSizeInput) {
-        return actorRepository.getAllPaginated(page, pageSizeInput);
+    public Actor getById(Integer id) {
+        return actorRepository.getById(id).orElseThrow(() -> new ResourceNotFoundException("Actor con id " + id + " no encontrado"));
     }
 
     @Override

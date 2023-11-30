@@ -6,6 +6,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ErrorMessage {
+
     private String message;
     private int code;
 
@@ -13,4 +14,5 @@ public class ErrorMessage {
         this.message = message;
         this.code = code;
     }
+
 }

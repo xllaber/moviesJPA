@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ActorService {
-    List<Actor> getAll();
 
     List<Actor> getAllPaginated(Integer page, Integer pageSizeInput);
+
+    Actor getById(Integer id);
 
     Integer getTotalRecords();
 
@@ -17,4 +18,5 @@ public interface ActorService {
     void update(Actor actor);
 
     void delete(Integer id);
+
 }
