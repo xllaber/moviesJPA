@@ -2,11 +2,11 @@ package com.llacerximo.movies.persistence.model;
 
 import com.llacerximo.movies.persistence.DAO.DirectorDAO;
 import com.llacerximo.movies.persistence.DAO.MovieCharacterDAO;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Connection;
 import java.util.List;
@@ -15,13 +15,24 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "movies")
 public class MovieEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String title;
     private Integer year;
     private Integer runtime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "director_id")
     private DirectorEntity directorEntity;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "movie_id")
     private List<MovieCharacterEntity> movieCharacterEntities;
 
     public MovieEntity(int id, String title, int year, int runtime) {

@@ -39,9 +39,14 @@ public interface MovieMapper {
                 .toList();
     }
 
-    @Mapping(target = "director", expression = "java(DirectorMapper.mapper.toDirector(movieEntity.getDirectorEntity()))")
-    @Mapping(target = "characters", expression = "java(MovieCharacterMapper.mapper.toMovieCharacterList(movieEntity.getMovieCharacterEntities()))")
+    @Mapping(target = "director", ignore = true)
+    @Mapping(target = "characters", ignore = true)
     Movie toMovie(MovieEntity movieEntity);
+
+    @Mapping(target = "director", ignore = true)
+    @Mapping(target = "characterMovies", ignore = true)
+    List<Movie> toMovieList(List<MovieEntity> movieEntities);
+
     Movie toMovie(MovieDetailWeb movieDetailWeb);
     @Mapping(target ="director", ignore = true)
     @Mapping(target ="characters", ignore = true)
