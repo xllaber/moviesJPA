@@ -15,6 +15,7 @@ import com.llacerximo.movies.mapper.MovieCharacterMapper;
 import com.llacerximo.movies.mapper.MovieMapper;
 import com.llacerximo.movies.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/movies")
 public class MovieController {
+
+    private final String urlBase = "http://localhost:8080";
 
     @Autowired
     MovieService movieService;
@@ -35,13 +38,18 @@ public class MovieController {
         List<MovieListWeb> movieWeb = movies.stream()
                 .map(MovieMapper.mapper::toMovieListWeb)
                 .toList();
-        PaginationUtils pagination = PaginationUtils.builder()
-                .page(page)
-                .pageSize(pageSize)
+//        PaginationUtils pagination = PaginationUtils.builder()
+//                .page(page)
+//                .pageSize(pageSize)
+//                .totalRecords(movieService.getTotalRecords())
+//                .build();
+//        pagination.setNextAndPrevious(pagination.getTotalRecords(), page);
+        Response response = Response.builder()
+                .data(movieWeb)
                 .totalRecords(movieService.getTotalRecords())
                 .build();
-        pagination.setNextAndPrevious(pagination.getTotalRecords(), page);
-        return new Response(movieWeb, pagination);
+        response.paginate(page, pageSize, urlBase);
+        return response;
 
     }
 

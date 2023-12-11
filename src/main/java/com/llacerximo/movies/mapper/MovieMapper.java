@@ -44,7 +44,7 @@ public interface MovieMapper {
     Movie toMovie(MovieEntity movieEntity);
 
     @Mapping(target = "director", ignore = true)
-    @Mapping(target = "characterMovies", ignore = true)
+    @Mapping(target = "characters", ignore = true)
     List<Movie> toMovieList(List<MovieEntity> movieEntities);
 
     Movie toMovie(MovieDetailWeb movieDetailWeb);

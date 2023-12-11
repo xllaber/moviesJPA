@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MovieRepositoryImpl implements MovieRepository {
@@ -39,69 +40,59 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Override
     public Optional<Movie> findById(Integer id) {
-        try (Connection connection = DBUtil.open(true)){
-            MovieEntity movieEntity = movieDAO.findById(connection, id).get();
-            if(movieEntity != null) {
-                movieEntity.getDirectorEntity(connection, directorDAO);
-                movieEntity.getMovieCharacterEntity(connection, movieCharacterDAO).forEach(
-                        movieCharacterEntity -> movieCharacterEntity.getActorEntity(connection, actorDAO)
-                );
-            }
-            Movie movie = MovieMapper.mapper.toMovie(movieEntity);
-            return Optional.of(movie);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Optional<MovieEntity> movieEntity = movieDAO.findById(id);
+        return Optional.of(MovieMapper.mapper.toMovie(movieEntity.get()));
     }
 
     @Override
     public Integer insert(Movie movie) {
-        try(Connection connection = DBUtil.open(false)) {
-            MovieEntity movieEntity =  MovieMapper.mapper.toMovieEntity(movie);
-            movieEntity.setDirectorEntity(DirectorMapper.mapper.toDirectorEntity(movie.getDirector()));
-            movieEntity.setMovieCharacterEntities(MovieCharacterMapper.mapper.toMovieCharacterEntityList(movie.getCharacters()));
-            Integer id = movieDAO.insert(connection, movieEntity);
-            return id;
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+//        try(Connection connection = DBUtil.open(false)) {
+//            MovieEntity movieEntity =  MovieMapper.mapper.toMovieEntity(movie);
+//            movieEntity.setDirectorEntity(DirectorMapper.mapper.toDirectorEntity(movie.getDirector()));
+//            movieEntity.setMovieCharacterEntities(MovieCharacterMapper.mapper.toMovieCharacterEntityList(movie.getCharacters()));
+//            Integer id = movieDAO.insert(connection, movieEntity);
+//            return id;
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e.getMessage());
+//        }
+        return null;
     }
 
     @Override
     public void update(Movie movie) {
-        Connection connection = DBUtil.open(false);
-        MovieEntity movieEntity = MovieMapper.mapper.toMovieEntity(movie);
-        movieEntity.setDirectorEntity(DirectorMapper.mapper.toDirectorEntity(movie.getDirector()));
-        movieEntity.setMovieCharacterEntities(MovieCharacterMapper.mapper.toMovieCharacterEntityList(movie.getCharacters()));
-        movieDAO.update(connection, movieEntity);
-        DBUtil.close(connection);
+//        Connection connection = DBUtil.open(false);
+//        MovieEntity movieEntity = MovieMapper.mapper.toMovieEntity(movie);
+//        movieEntity.setDirectorEntity(DirectorMapper.mapper.toDirectorEntity(movie.getDirector()));
+//        movieEntity.setMovieCharacterEntities(MovieCharacterMapper.mapper.toMovieCharacterEntityList(movie.getCharacters()));
+//        movieDAO.update(connection, movieEntity);
+//        DBUtil.close(connection);
     }
 
     @Override
     public void delete(Integer id) {
-        Connection connection = DBUtil.open(false);
-        movieDAO.delete(connection, id);
-        DBUtil.close(connection);
+//        Connection connection = DBUtil.open(false);
+//        movieDAO.delete(connection, id);
+//        DBUtil.close(connection);
     }
 
     @Override
     public void addCharacterToMovie(Integer movieId, MovieCharacter movieCharacter) {
-        Connection connection = DBUtil.open(true);
-        MovieCharacterEntity movieCharacterEntity = MovieCharacterMapper.mapper.toMovieCharacterEntity(movieCharacter);
-        movieDAO.addCharacterToMovie(connection, movieId, movieCharacterEntity);
+//        Connection connection = DBUtil.open(true);
+//        MovieCharacterEntity movieCharacterEntity = MovieCharacterMapper.mapper.toMovieCharacterEntity(movieCharacter);
+//        movieDAO.addCharacterToMovie(connection, movieId, movieCharacterEntity);
     }
 
     @Override
     public void updateCharacterOfMovie(MovieCharacter movieCharacter, Integer movieId) {
-        Connection connection = DBUtil.open(true);
-        MovieCharacterEntity movieCharacterEntity = MovieCharacterMapper.mapper.toMovieCharacterEntity(movieCharacter);
-        movieDAO.updateCharacterOfMovie(connection, movieCharacterEntity, movieId);
+//        Connection connection = DBUtil.open(true);
+//        MovieCharacterEntity movieCharacterEntity = MovieCharacterMapper.mapper.toMovieCharacterEntity(movieCharacter);
+//        movieDAO.updateCharacterOfMovie(connection, movieCharacterEntity, movieId);
     }
 
     @Override
     public void deleteCharacterOfMovie(Integer characterId, Integer movieId) {
-        Connection connection = DBUtil.open(true);
-        movieDAO.deleteCharacterOfMovie(connection, characterId, movieId);
+//        Connection connection = DBUtil.open(true);
+//        movieDAO.deleteCharacterOfMovie(connection, characterId, movieId);
     }
 
     @Override
