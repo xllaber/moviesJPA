@@ -3,10 +3,12 @@ package com.llacerximo.movies.persistence.model;
 import com.llacerximo.movies.persistence.DAO.ActorDAO;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Connection;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "actors_movies")
 public class MovieCharacterEntity {

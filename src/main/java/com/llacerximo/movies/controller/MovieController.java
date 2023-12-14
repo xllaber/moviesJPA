@@ -38,12 +38,6 @@ public class MovieController {
         List<MovieListWeb> movieWeb = movies.stream()
                 .map(MovieMapper.mapper::toMovieListWeb)
                 .toList();
-//        PaginationUtils pagination = PaginationUtils.builder()
-//                .page(page)
-//                .pageSize(pageSize)
-//                .totalRecords(movieService.getTotalRecords())
-//                .build();
-//        pagination.setNextAndPrevious(pagination.getTotalRecords(), page);
         Response response = Response.builder()
                 .data(movieWeb)
                 .totalRecords(movieService.getTotalRecords())

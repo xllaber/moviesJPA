@@ -7,6 +7,7 @@ import com.llacerximo.movies.controller.model.movie.MovieUpdateWeb;
 import com.llacerximo.movies.domain.entity.Actor;
 import com.llacerximo.movies.domain.entity.Movie;
 import com.llacerximo.movies.persistence.model.MovieEntity;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -32,19 +33,20 @@ public interface MovieMapper {
     MovieEntity toMovieEntity(ResultSet resultSet) throws SQLException;
     MovieEntity toMovieEntity(Movie movie);
 
-    @Named("actorToActorIds")
-    default List<Integer> mapActorsToActorIds(List<Actor> actors){
-        return actors.stream()
-                .map(actor -> actor.getId())
-                .toList();
-    }
-
     @Mapping(target = "director", ignore = true)
     @Mapping(target = "characters", ignore = true)
+    @Named("toMovie")
     Movie toMovie(MovieEntity movieEntity);
 
+    @Mapping(target = "director", expression = "java(DirectorMapper.mapper.toDirector(movieEntity.getDirectorEntity()))")
+    @Mapping(target = "characters", expression = "java(MovieCharacterMapper.mapper.toMovieCharacters(movieEntity.getMovieCharacterEntities()))")
+    @Named("toMovieWithDirectorAndCharacterMovies")
+    Movie toMovieWithDirectorAndCharacterMovies(MovieEntity movieEntity);
+
     @Mapping(target = "director", ignore = true)
-    @Mapping(target = "characters", ignore = true)
+    @Mapping(target = "characterMovies", ignore = true)
+    @IterableMapping(qualifiedByName = "toMovie")
+    @Named("toMovieList")
     List<Movie> toMovieList(List<MovieEntity> movieEntities);
 
     Movie toMovie(MovieDetailWeb movieDetailWeb);

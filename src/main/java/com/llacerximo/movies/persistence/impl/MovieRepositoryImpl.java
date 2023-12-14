@@ -4,6 +4,8 @@ import com.llacerximo.movies.db.DBUtil;
 import com.llacerximo.movies.domain.entity.Movie;
 import com.llacerximo.movies.domain.entity.MovieCharacter;
 import com.llacerximo.movies.domain.repository.MovieRepository;
+import com.llacerximo.movies.mapper.DirectorMapper;
+import com.llacerximo.movies.mapper.MovieCharacterMapper;
 import com.llacerximo.movies.mapper.MovieMapper;
 import com.llacerximo.movies.persistence.DAO.ActorDAO;
 import com.llacerximo.movies.persistence.DAO.DirectorDAO;
@@ -41,7 +43,7 @@ public class MovieRepositoryImpl implements MovieRepository {
     @Override
     public Optional<Movie> findById(Integer id) {
         Optional<MovieEntity> movieEntity = movieDAO.findById(id);
-        return Optional.of(MovieMapper.mapper.toMovie(movieEntity.get()));
+        return Optional.of(MovieMapper.mapper.toMovieWithDirectorAndCharacterMovies(movieEntity.get()));
     }
 
     @Override

@@ -28,6 +28,9 @@ public interface MovieCharacterMapper {
     MovieCharacter toMovieCharacter(MovieCharacterEntity movieCharacterEntity);
     MovieCharacter toMovieCharacter(MovieCharacterCreateWeb movieCharacterCreateWeb);
     MovieCharacter toMovieCharacter(MovieCharacterUpdateWeb movieCharacterUpdateWeb);
+    List<MovieCharacter> toMovieCharacters(List<MovieCharacterEntity> movieCharacterEntities);
+
+    List<MovieCharacterEntity> toMovieCharacterEntities(List<MovieCharacter> movieCharacters);
     @Mapping(target = "actorEntity", expression = "java(ActorMapper.mapper.toActorEntity(movieCharacter.getActor()))")
     MovieCharacterEntity toMovieCharacterEntity(MovieCharacter movieCharacter);
 
