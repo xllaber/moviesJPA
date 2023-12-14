@@ -16,16 +16,15 @@ public class MovieCharacterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    private String character;
+    private String characters;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "actor_id")
     private ActorEntity actorEntity;
 
-    public MovieCharacterEntity(Integer id, String character) {
+    public MovieCharacterEntity(Integer id, String characters) {
         this.id = id;
-        this.character = character;
+        this.characters = characters;
     }
 
     public ActorEntity getActorEntity(Connection connection, ActorDAO actorDAO) {

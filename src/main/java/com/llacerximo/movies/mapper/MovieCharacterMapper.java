@@ -24,6 +24,9 @@ public interface MovieCharacterMapper {
     @Mapping(target = "actorId", expression = "java(movieCharacter.getActor().getId())")
     @Mapping(target = "actorName", expression = "java(movieCharacter.getActor().getName())")
     MovieCharacterListWeb toMovieCharacterListWeb(MovieCharacter movieCharacter);
+    @Mapping(target = "actorId", expression = "java(movieCharacter.getActor().getId())")
+    @Mapping(target = "actorName", expression = "java(movieCharacter.getActor().getName())")
+    List<MovieCharacterListWeb> toMovieCharacterListWebList(List<MovieCharacter> movieCharacters);
     @Mapping(target = "actor", expression = "java(ActorMapper.mapper.toActor(movieCharacterEntity.getActorEntity()))")
     MovieCharacter toMovieCharacter(MovieCharacterEntity movieCharacterEntity);
     MovieCharacter toMovieCharacter(MovieCharacterCreateWeb movieCharacterCreateWeb);
@@ -35,18 +38,18 @@ public interface MovieCharacterMapper {
     MovieCharacterEntity toMovieCharacterEntity(MovieCharacter movieCharacter);
 
     @Mapping(target = "id", expression = "java(resultSet.getInt(\"id\"))")
-    @Mapping(target = "character", expression = "java(resultSet.getString(\"characters\"))")
+    @Mapping(target = "characters", expression = "java(resultSet.getString(\"characters\"))")
 //    @Mapping(target = "movieId", expression = "java(resultSet.getInt(\"movie_id\"))")
 //    @Mapping(target = "actorId", expression = "java(resultSet.getInt(\"actor_id\"))")
     MovieCharacterEntity toMovieCharacterEntity(ResultSet resultSet) throws SQLException;
 
-    default List<MovieCharacterListWeb> toMovieCharacterListWebList(List<MovieCharacter> movieCharacters){
-        if (movieCharacters == null) return null;
-        List<MovieCharacterListWeb> movieCharacterListWebs = movieCharacters.stream()
-                .map(MovieCharacterMapper.mapper::toMovieCharacterListWeb)
-                .toList();
-        return movieCharacterListWebs;
-    }
+//    default List<MovieCharacterListWeb> toMovieCharacterListWebList(List<MovieCharacter> movieCharacters){
+//        if (movieCharacters == null) return null;
+//        List<MovieCharacterListWeb> movieCharacterListWebs = movieCharacters.stream()
+//                .map(MovieCharacterMapper.mapper::toMovieCharacterListWeb)
+//                .toList();
+//        return movieCharacterListWebs;
+//    }
 
     default List<MovieCharacter> toMovieCharacterList(List<MovieCharacterEntity> movieCharacterEntities){
         if (movieCharacterEntities == null) return null;

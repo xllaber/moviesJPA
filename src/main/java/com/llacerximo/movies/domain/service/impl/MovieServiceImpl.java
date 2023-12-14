@@ -1,7 +1,5 @@
 package com.llacerximo.movies.domain.service.impl;
 
-import com.llacerximo.movies.controller.model.MovieCharacter.MovieCharacterUpdateWeb;
-import com.llacerximo.movies.domain.entity.Actor;
 import com.llacerximo.movies.domain.entity.Director;
 import com.llacerximo.movies.domain.entity.Movie;
 import com.llacerximo.movies.domain.entity.MovieCharacter;
@@ -11,7 +9,6 @@ import com.llacerximo.movies.domain.repository.MovieCharacterRepository;
 import com.llacerximo.movies.domain.service.MovieService;
 import com.llacerximo.movies.exceptions.ResourceNotFoundException;
 import com.llacerximo.movies.domain.repository.MovieRepository;
-import com.llacerximo.movies.persistence.DAO.MovieDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +52,7 @@ public class MovieServiceImpl implements MovieService {
         List<MovieCharacter> movieCharacters = new ArrayList<>();
         characters.forEach((actorId, characterName) -> {
             MovieCharacter movieCharacter = new MovieCharacter();
-            movieCharacter.setCharacter(characterName);
+            movieCharacter.setCharacters(characterName);
             movieCharacter.setActor(
                     actorRepository.getById(actorId)
                             .orElseThrow(() -> new ResourceNotFoundException("Actor con id " + actorId + " no encontrado"))

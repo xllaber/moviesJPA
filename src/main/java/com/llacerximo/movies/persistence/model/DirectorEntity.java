@@ -18,7 +18,9 @@ public class DirectorEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    @Column(name = "birthyear")
     private Integer birthYear;
+    @Column(name = "deathyear")
     private Integer deathYear;
 
 }
